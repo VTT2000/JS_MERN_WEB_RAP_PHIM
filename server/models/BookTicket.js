@@ -6,10 +6,6 @@ const BookTicketSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'movieSchedules'
     },
-    maGhe: {
-        type: Schema.Types.ObjectId,
-        ref: 'seats'
-    },
     maNguoiDung:{
         type: Schema.Types.ObjectId,
         ref: 'users'

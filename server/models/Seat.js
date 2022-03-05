@@ -2,12 +2,19 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const SeatSchema = new Schema({
-    giaVe: {
-        type: Number
+    tenGhe: {
+        type: String
     },
     maRap:{
         type: Schema.Types.ObjectId,
         ref:'cinemas'
+    },
+    maLoaiGhe:{
+        type: Schema.Types.ObjectId,
+        ref:'typeSeats'
+    },
+    stt: {
+        type: String
     }
 })
 
