@@ -5,62 +5,6 @@ const jwt = require('jsonwebtoken')
 
 const Movie = require('../models/Movie')
 
-// cái này đẩy lên csdl làm xong hết api xóa đi
-router.post('/post', async (req, res) => {
-
-    const {
-        tenPhim,
-        biDanh,
-        trailer,
-        hinhAnh,
-        moTa,
-        ngayKhoiChieu,
-        danhGia
-    } = req.body
-
-    try {
-        // Simple validation
-        if (!tenPhim || !trailer || !hinhAnh || !moTa) {
-            return res
-                .status(400
-                    .json({
-                        success: false,
-                        message: 'Missing tenPhim and/or trailer and/or hinhAnh and/or moTa'
-                    })
-                )
-        }
-        // check for existing user
-        const movie = await Movie.findOne({ tenPhim })
-        if (movie) {
-            return res
-                .status(400)
-                .json({
-                    success: false,
-                    message: 'tenPhim already taken'
-                })
-        }
-        const newMovie = new Movie({
-            tenPhim,
-            biDanh,
-            trailer,
-            hinhAnh,
-            moTa,
-            ngayKhoiChieu,
-            danhGia
-        })
-        await newMovie.save()
-        return res
-            .status(200)
-            .json({
-                success: true,
-                message: 'Movie created successfully'
-            })
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ success: false, message: 'Intenal server error' })
-    }
-})
-
 //-------------------------------------------------
 router.get('/LayDanhSachPhim', async (req, res) => {
     try {
@@ -80,16 +24,68 @@ router.get('/LayDanhSachPhim', async (req, res) => {
                 }
             )
         })
-        
+
         return res
             .status(200)
-            .json(
-                listJsonRespone
-            )
+            .json({
+                message: "Xử lý thành công",
+                content: listJsonRespone
+            })
     } catch (error) {
         console.log(error)
         res.status(500).json({ success: false, message: 'Intenal server error' })
     }
 })
+
+router.get('/LayDanhSachPhimPhanTrang', async (req, res) => {
+    try {
+        if (req.query.soPhanTuTrenTrang == null) {
+            req.query.soPhanTuTrenTrang = 0
+        }
+        if (req.query.soTrang == null) {
+            req.query.soTrang = 1
+        }
+        if (req.query.tenPhim) {
+            const list = await Movie
+                .find(
+                    {
+                        tenPhim:
+                        {
+                            $regex: '.*' + req.query.tuKhoa + '.*',
+                            $options: 'i'
+                        }
+                    }
+                )
+                .limit(req.query.soPhanTuTrenTrang)
+                .skip((req.query.soTrang - 1) * req.query.soPhanTuTrenTrang)
+            
+            
+            return res
+                .status(200)
+                .json({
+                    message: "Xử lý thành công",
+                    content: list
+                })
+        }
+        else {
+            const listUsers = await User
+                .find()
+                .limit(req.query.soPhanTuTrenTrang)
+                .skip((req.query.soTrang - 1) * req.query.soPhanTuTrenTrang)
+            return res
+                .status(200)
+                .json({
+                    message: "Xử lý thành công",
+                    content: listUsers
+                })
+        }
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ success: false, message: 'Intenal server error' })
+    }
+})
+
+
 
 module.exports = router

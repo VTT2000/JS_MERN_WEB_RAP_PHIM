@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 const qlNguoiDungRouter = require('./routes/quanLyNguoiDung')
 const qlPhimRouter = require('./routes/quanLyPhim')
 const qlRapRouter = require('./routes/quanLyRap')
+const qlPost = require('./routes/post')
 
 // Cac route trang admin
 //const adminUserTypeRouter = require('./routesAdmin/usertype')
@@ -33,9 +34,17 @@ connectDB()
 const app = express()
 app.use(express.json())
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
+});
+
 app.use('/api/QuanLyNguoiDung', qlNguoiDungRouter)
 app.use('/api/QuanLyPhim', qlPhimRouter)
 app.use('/api/QuanLyRap', qlRapRouter)
+app.use('/api/posts', qlPost)
 
 //app.use('/admin/usertypes', adminUserTypeRouter)
 //app.use('/admin/users', adminUserRouter)

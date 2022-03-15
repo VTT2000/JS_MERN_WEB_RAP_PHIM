@@ -1,5 +1,5 @@
 ### api bo sung nhanh csdl ko phải api chương trình
-POST http://localhost:5000/api/QuanLyPhim/post
+POST http://localhost:5000/api/posts/Movie
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
     "danhGia": 10
 }
 ### 
-POST http://localhost:5000/api/QuanLyNguoiDung/post0
+POST http://localhost:5000/api/posts/UserType
 Content-Type: application/json
 
 {
@@ -22,7 +22,7 @@ Content-Type: application/json
 "Quản trị"
 "Khách hàng"
 ###
-POST http://localhost:5000/api/QuanLyRap/post0
+POST http://localhost:5000/api/posts/CinemaSystem
 Content-Type: application/json
 
 {
@@ -39,7 +39,7 @@ Content-Type: application/json
 "logo": "http://movie0706.cybersoft.edu.vn/hinhanh/cgv.png"
 ###
 
-POST http://localhost:5000/api/QuanLyRap/post1
+POST http://localhost:5000/api/posts/CinemaCluster
 Content-Type: application/json
 
 {
@@ -59,7 +59,7 @@ Content-Type: application/json
 "diaChi": "30 Bờ Bao Tân Thắng, Sơn Kỳ, Tân Phú",
 ###
 
-POST http://localhost:5000/api/QuanLyRap/post2
+POST http://localhost:5000/api/posts/Cinema
 Content-Type: application/json
 
 {
@@ -122,7 +122,10 @@ GET http://localhost:5000/api/QuanLyNguoiDung/TimKiemNguoiDungPhanTrang?tuKhoa=1
 ###
 
 ### api Rạp
-GET http://localhost:5000/api/QuanLyRap/LayThongTinHeThongRap
+GET http://localhost:5000/api/QuanLyRap/LayThongTinHeThongRap?maHeThongRap=621f82d51dbca3e2bd522e12
+###
+GET http://localhost:5000/api/QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRap=621f82d51dbca3e2bd522e12
+###
 
 
 

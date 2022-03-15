@@ -6,28 +6,6 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const UserType = require('../models/UserType')
 
-// cái này đẩy lên csdl làm xong hết api xóa đi
-router.post('/post0', async (req, res) => {
-    const {
-        tenLoai
-    } = req.body
-    try {
-        const newUserType = new UserType({
-            tenLoai
-        })
-        await newUserType.save()
-        return res
-            .status(200)
-            .json({
-                success: true,
-                message: 'UserType created successfully'
-            })
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ success: false, message: 'Intenal server error' })
-    }
-})
-
 //-------------------------------------------------
 router.get('/LayDanhSachLoaiNguoiDung', async (req, res) => {
 
@@ -47,7 +25,10 @@ router.get('/LayDanhSachLoaiNguoiDung', async (req, res) => {
 
         return res.
             status(200)
-            .json(listJsonResult)
+            .json({
+                message: "Xử lý thành công",
+                content:listJsonResult
+            })
     } catch (error) {
         console.log(error)
         res.status(500).json({ success: false, message: 'Intenal server error' })
@@ -61,7 +42,10 @@ router.post('/DangNhap', async (req, res) => {
     if (!taiKhoan || !matKhau) {
         return res
             .status(400)
-            .json('Missing taiKhoan and/ or matKhau')
+            .json({
+                message: "Xử lý thất bại",
+                content: "Missing taiKhoan and/ or matKhau"
+            })
     }
 
     try {
@@ -70,7 +54,10 @@ router.post('/DangNhap', async (req, res) => {
         if (!user) {
             return res
                 .status(500)
-                .json('Tài khoản hoặc mật khẩu không đúng!')
+                .json({
+                    message: "Xử lý thất bại",
+                    content: "Tài khoản hoặc mật khẩu không đúng!"
+                })
         }
 
         // compare argon2 decryption
@@ -79,7 +66,10 @@ router.post('/DangNhap', async (req, res) => {
         if (!passwordValid) {
             return res
                 .status(400)
-                .json('Tài khoản hoặc mật khẩu không đúng!')
+                .json({
+                    message: "Xử lý thất bại",
+                    content: "Tài khoản hoặc mật khẩu không đúng!"
+                })
 
         }
 
@@ -97,7 +87,10 @@ router.post('/DangNhap', async (req, res) => {
         }
         return res
             .status(200)
-            .json(jsonResult)
+            .json({
+                message: "Xử lý thành công",
+                content: jsonResult
+            })
     } catch (error) {
         console.log(error)
         res.status(500).json({ success: false, message: 'Intenal server error' })
@@ -118,13 +111,18 @@ router.post('/DangKy', async (req, res) => {
     if (!taiKhoan || !matKhau) {
         return res
             .status(400)
-            .json('Missing taiKhoan and/or matKhau')
+            .json({
+                message: "Xử lý thất bại",
+                content: "Missing taiKhoan and/or matKhau"
+            })
     }
 
     if (!hoTen || !soDt || !maLoaiNguoiDung) {
         return res
             .status(400)
-            .json('Missing hoTen and/or soDt and/or maLoaiNguoiDung')
+            .json({
+                message: "Xử lý thất bại",
+                content: "Missing hoTen and/or soDt and/or maLoaiNguoiDung"})
     }
 
     try {
@@ -133,21 +131,30 @@ router.post('/DangKy', async (req, res) => {
         if (user0) {
             return res
                 .status(400)
-                .json('Tài khoản đã được đăng ký')
+                .json({
+                    message: "Xử lý thất bại",
+                    content: "Tài khoản đã được đăng ký"
+                })
         }
         // check for existing user So dien thoai
         const user1 = await User.findOne({ soDt })
         if (user1) {
             return res
                 .status(400)
-                .json('Số điện thoại đã được đăng ký')
+                .json({
+                    message: "Xử lý thất bại",
+                    content: "Số điện thoại đã được đăng ký"
+                })
         }
         // check for existing user email
         const user2 = await User.findOne({ email })
         if (user2) {
             return res
                 .status(400)
-                .json('Email đã được đăng ký')
+                .json({
+                    message: "Xử lý thất bại",
+                    content: "Email đã được đăng ký"
+                })
         }
 
         // All good
@@ -173,7 +180,10 @@ router.post('/DangKy', async (req, res) => {
 
         return res
             .status(200)
-            .json(jsonResult)
+            .json({
+                message: "Xử lý thành công",
+                content: jsonResult
+            })
     } catch (error) {
         console.log(error)
         res.status(500).json({ success: false, message: 'Intenal server error' })
@@ -202,13 +212,19 @@ router.get('/LayDanhSachNguoiDung', async (req, res) => {
             )
             return res
                 .status(200)
-                .json(listUsers)
+                .json({
+                    message: "Xử lý thành công",
+                    content: listUsers
+                })
         }
         else {
             const listUsers = await User.find()
             return res
                 .status(200)
-                .json(listUsers)
+                .json({
+                    message: "Xử lý thành công",
+                    content: listUsers
+                })
         }
 
     } catch (error) {
@@ -248,7 +264,10 @@ router.get('/LayDanhSachNguoiDungPhanTrang', async (req, res) => {
                 .skip((req.query.soTrang - 1) * req.query.soPhanTuTrenTrang)
             return res
                 .status(200)
-                .json(listUsers)
+                .json({
+                    message: "Xử lý thành công",
+                    content: listUsers
+                })
         }
         else {
             const listUsers = await User
@@ -257,7 +276,10 @@ router.get('/LayDanhSachNguoiDungPhanTrang', async (req, res) => {
                 .skip((req.query.soTrang - 1) * req.query.soPhanTuTrenTrang)
             return res
                 .status(200)
-                .json(listUsers)
+                .json({
+                    message: "Xử lý thành công",
+                    content: listUsers
+                })
         }
 
     } catch (error) {
@@ -289,13 +311,19 @@ router.get('/TimKiemNguoiDung', async (req, res) => {
             )
             return res
                 .status(200)
-                .json(listUsers)
+                .json({
+                    message: "Xử lý thành công",
+                    content: listUsers
+                })
         }
         else {
             const listUsers = await User.find()
             return res
                 .status(200)
-                .json(listUsers)
+                .json({
+                    message: "Xử lý thành công",
+                    content: listUsers
+                })
         }
 
     } catch (error) {
@@ -335,7 +363,10 @@ router.get('/TimKiemNguoiDungPhanTrang', async (req, res) => {
                 .skip((req.query.soTrang - 1) * req.query.soPhanTuTrenTrang)
             return res
                 .status(200)
-                .json(listUsers)
+                .json({
+                    message: "Xử lý thành công",
+                    content: listUsers
+                })
         }
         else {
             const listUsers = await User
@@ -344,7 +375,10 @@ router.get('/TimKiemNguoiDungPhanTrang', async (req, res) => {
                 .skip((req.query.soTrang - 1) * req.query.soPhanTuTrenTrang)
             return res
                 .status(200)
-                .json(listUsers)
+                .json({
+                    message: "Xử lý thành công",
+                    content: listUsers
+                })
         }
 
     } catch (error) {
