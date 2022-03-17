@@ -5,6 +5,17 @@ const jwt = require('jsonwebtoken')
 const verifyToken = require('../middleware/auth1')
 
 const UserType = require('../models/UserType')
+const User = require('../models/User')
+const Seat = require('../models/Seat')
+const TypeSeat = require('../models/TypeSeat')
+const Movie = require('../models/Movie')
+const MovieSchedule = require('../models/MovieSchedule')
+const ListSeatBook = require('../models/ListSeatBook')
+const Cinema = require('../models/Cinema')
+const CinemaCluster = require('../models/CinemaCluster')
+const CinemaSystem = require('../models/CinemaSystem')
+const BookTicket = require('../models/BookTicket')
+
 
 router.post('/UserType', async (req, res) => {
     const {
@@ -222,6 +233,40 @@ router.post('/Cinema', async (req, res) => {
         res.status(500).json({ success: false, message: 'Intenal server error' })
     }
 })
+
+//------------------------------------------------------
+router.post('/MovieSchedule', async (req, res) => {
+
+    const {
+        movie,
+        ngayChieuGioChieu,
+        giaVe,
+        cinema,
+        thoiLuong
+    } = req.body
+
+    try {
+        
+        const newMovieSchedule = new MovieSchedule({
+            movie,
+            ngayChieuGioChieu,
+            giaVe,
+            cinema,
+            thoiLuong
+        })
+        await newMovieSchedule.save()
+        return res
+            .status(200)
+            .json({
+                success: true,
+                message: 'MovieSchedule created successfully'
+            })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ success: false, message: 'Intenal server error' })
+    }
+})
+
 
 
 module.exports = router

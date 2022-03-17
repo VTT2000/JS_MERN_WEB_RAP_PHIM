@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken')
 const CinemaSystem = require('../models/CinemaSystem')
 const CinemaCluster = require('../models/CinemaCluster')
 const Cinema = require('../models/Cinema')
+const MovieSchedule = require('../models/MovieSchedule')
+const Movie = require('../models/Movie')
 
 
 
@@ -92,6 +94,164 @@ router.get('/LayThongTinCumRapTheoHeThong', async (req, res) => {
     }
 })
 
+router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
+    try {
+        if(!req.query.maHeThongRap){
+            return res
+                .status(200)
+                .json({
+                    message: "Xử lý thất bại",
+                    content: "Mã hệ thống rạp không tồn tại !"
+                })
+        }
+        else{
+            // tim cac rap co lich chieu phim
+            const conditionCinemas = await MovieSchedule.find().distinct("cinema")
+            // tim cac cum rap co lich chieu phim
+            const conditionCinemaClusters0 = await Cinema.find({_id:conditionCinemas}).distinct("maCumRap")
+            // tim cac cum rap co lich chieu phim theo he thong rap
+            const conditionCinemaClusters1 = await CinemaCluster.find({_id: conditionCinemaClusters0, maHeThongRap: req.query.maHeThongRap})
+            // insertdata
+            var lstCumRap = new Array()
+            for (let x = 0; x < conditionCinemaClusters1.length; x++) {
+                const cinemaCluster = conditionCinemaClusters1[x]
+                lstCumRap[x] = new Object
+                lstCumRap[x].maCumRap = cinemaCluster._id
+                lstCumRap[x].tenCumRap = cinemaCluster.tenCumRap
+                lstCumRap[x].diaChi = cinemaCluster.diaChi
+                lstCumRap[x].danhSachPhim = new Array()
+                // lay cac rap co lich chieu phim theo he thong rap
+                const conditionCinemasByIdCinemaCluster = await Cinema.find({_id:conditionCinemas, maCumRap: cinemaCluster._id}).distinct("_id")
+                // lay cac phim co lich chieu theo he thong rap
+                const listMovies = await MovieSchedule.find({cinema: conditionCinemasByIdCinemaCluster}).distinct("movie")
+                for (let y = 0; y < listMovies.length; y++) {
+                    const idMOVIE = listMovies[y]
+                    const movie = await Movie.findOne({_id: idMOVIE})
+                    lstCumRap[x].danhSachPhim[y] = new Object()
+                    lstCumRap[x].danhSachPhim[y].maPhim = movie._id
+                    lstCumRap[x].danhSachPhim[y].tenPhim = movie.tenPhim
+                    lstCumRap[x].danhSachPhim[y].hinhAnh = movie.hinhAnh
+                    lstCumRap[x].danhSachPhim[y].lstLichChieuTheoPhim = new Array()
+                    // lay cac lich chieu cua rap co lich chieu theo he thong rap
+                    const listMovieSchedule = await MovieSchedule.find({ movie: movie._id, cinema: conditionCinemasByIdCinemaCluster}).populate("cinema")
+                    listMovieSchedule.forEach(e=>{
+                        lstCumRap[x].danhSachPhim[y].lstLichChieuTheoPhim.push({
+                            maLichChieu: e._id,
+                            maRap: e.cinema._id,
+                            tenRap: e.cinema.tenRap,
+                            ngayChieuGioChieu: e.ngayChieuGioChieu,
+                            giaVe: e.giaVe
+                        })
+                    })
+                    
+                }
 
+            }
+
+            // lay CinemaSystem
+            const cinemaSystem = await CinemaSystem.findOne({_id:req.query.maHeThongRap})
+            var jsonRespone = new Object()
+            jsonRespone.maHeThongRap = cinemaSystem._id
+            jsonRespone.tenHeThongRap = cinemaSystem.tenHeThongRap
+            jsonRespone.logo = cinemaSystem.logo
+            jsonRespone.lstCumRap = lstCumRap
+            
+            return res
+                .status(200)
+                .json({
+                    message: "Xử lý thành công",
+                    content: jsonRespone
+                })
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ success: false, message: 'Intenal server error' })
+    }
+})
+
+
+
+
+router.get("/LayThongTinLichChieuPhim", async(req, res) =>{
+    try {
+        if(!req.query.MaPhim){
+            return res
+                .status(200)
+                .json({
+                    message: "Xử lý thất bại",
+                    content: "Mã phim không tồn tại !"
+                })
+        }
+        else{
+            // tim ma rap co lich chieu phim
+            const conditionCinemas = await MovieSchedule.find({ movie: req.query.MaPhim}).distinct("cinema")
+            // tim ma cac cum rap co lich chieu phim
+            const conditionCinemaClusters = await Cinema.find({ _id: conditionCinemas}).distinct("maCumRap")
+            // tim ma cac he thong rap co lich chieu phim
+            const conditionCinemaSystems = await CinemaCluster.find({_id: conditionCinemaClusters}).distinct("maHeThongRap")
+            // insert data
+            var heThongRapChieu = new Array()
+            for (let x = 0; x < conditionCinemaSystems.length; x++) {
+                const idSYSTEM = conditionCinemaSystems[x]
+                const cinemaSystem = await CinemaSystem.find({_id: idSYSTEM})
+                heThongRapChieu[x] = new Object()
+                heThongRapChieu[x].maHeThongRap = cinemaSystem._id
+                heThongRapChieu[x].tenHeThongRap = cinemaSystem.tenHeThongRap
+                heThongRapChieu[x].logo = cinemaSystem.logo
+                const listCLUSTER = await CinemaCluster.find({maHeThongRap:idSYSTEM, _id:conditionCinemaClusters})
+                heThongRapChieu[x].cumRapChieu = new Array(listCLUSTER.length)
+                for (let y = 0; y < listCLUSTER.length; y++) {
+                    const idCLUSTER = listCLUSTER[y]._id
+                    const listCinema = await Cinema.find({maCumRap:idCLUSTER})
+                    heThongRapChieu[x].cumRapChieu[y] = new Object()
+                    // xu ly lich chieu phim // code chua xong
+                    heThongRapChieu[x].cumRapChieu[y].maCumRap = listCLUSTER[y]._id
+                    heThongRapChieu[x].cumRapChieu[y].tenCumRap = listCLUSTER[y].tenCumRap
+                    heThongRapChieu[x].cumRapChieu[y].hinhAnh = listCLUSTER[y].hinhAnh
+                    heThongRapChieu[x].cumRapChieu[y].lichChieuPhim = new Array()
+                    for (let z = 0; z < listCinema.length; z++) {
+                        const movieScheduleCinema = await MovieSchedule.find({ movie: req.query.MaPhim}).populate("cinema").find({cinema:listCinema[z]})
+                        if(movieScheduleCinema){
+                            var listLichChieuTheoRap = new Array()
+                            movieScheduleCinema.forEach(e=>{
+                                listLichChieuTheoRap.push({
+                                    maLichChieu: e._id,
+                                    maRap: e.cinema._id,
+                                    tenRap: e.cinema.tenRap,
+                                    ngayChieuGioChieu: e.ngayChieuGioChieu,
+                                    giaVe: e.giaVe,
+                                    thoiLuong: e.thoiLuong
+                                })
+                            })
+                            heThongRapChieu[x].cumRapChieu[y].lichChieuPhim.push(listLichChieuTheoRap)
+                        }
+                    }
+                }
+            }
+            // lay movie
+            const movie = await Movie.findOne({_id: req.query.MaPhim})
+            var jsonRespone = new Object()
+            jsonRespone.maPhim = movie._id
+            jsonRespone.tenPhim = movie.tenPhim
+            jsonRespone.biDanh = movie.biDanh
+            jsonRespone.trailer = movie.trailer
+            jsonRespone.hinhAnh = movie.hinhAnh
+            jsonRespone.moTa = movie.moTa
+            jsonRespone.ngayKhoiChieu = movie.ngayKhoiChieu
+            jsonRespone.danhGia = movie.danhGia
+            jsonRespone.heThongRapChieu = heThongRapChieu
+            return res
+                .status(200)
+                .json({
+                    message: "Xử lý thành công",
+                    content: jsonRespone
+                })
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ success: false, message: 'Intenal server error' })
+    }
+
+})
 
 module.exports = router

@@ -68,7 +68,7 @@ router.get('/LayDanhSachPhimPhanTrang', async (req, res) => {
                 })
         }
         else {
-            const listUsers = await User
+            const list = await Movie
                 .find()
                 .limit(req.query.soPhanTuTrenTrang)
                 .skip((req.query.soTrang - 1) * req.query.soPhanTuTrenTrang)
@@ -76,7 +76,7 @@ router.get('/LayDanhSachPhimPhanTrang', async (req, res) => {
                 .status(200)
                 .json({
                     message: "Xử lý thành công",
-                    content: listUsers
+                    content: list
                 })
         }
 
