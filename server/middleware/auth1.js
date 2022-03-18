@@ -16,11 +16,11 @@ const verifyTokenAdmin = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         req.userId = decoded.userId
 
-        const user = await User.findOne({ _id: req.userId }).populate('userType')
-        if (user.userType.nameUserType != "Nhân viên") {
+        const user = await User.findOne({ _id: req.userId }).populate('maLoaiNguoiDung')
+        if (user.maLoaiNguoiDung.tenLoai != "Quản trị") {
             return res
                 .status(401)
-                .json({ success: false, message: 'Accesstoken have not permission'})
+                .json({ success: false, message: 'Accesstoken have not permission admin'})
         }
         next()
     } catch (error) {

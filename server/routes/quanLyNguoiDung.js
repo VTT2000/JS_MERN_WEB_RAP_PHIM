@@ -236,7 +236,7 @@ router.get('/LayDanhSachNguoiDung', async (req, res) => {
 router.get('/LayDanhSachNguoiDungPhanTrang', async (req, res) => {
     try {
         if(req.query.soPhanTuTrenTrang == null){
-            req.query.soPhanTuTrenTrang = 0
+            req.query.soPhanTuTrenTrang = 1
         }
         if(req.query.soTrang == null){
             req.query.soTrang = 1
@@ -335,7 +335,7 @@ router.get('/TimKiemNguoiDung', async (req, res) => {
 router.get('/TimKiemNguoiDungPhanTrang', async (req, res) => {
     try {
         if(req.query.soPhanTuTrenTrang == null){
-            req.query.soPhanTuTrenTrang = 0
+            req.query.soPhanTuTrenTrang = 1
         }
         if(req.query.soTrang == null){
             req.query.soTrang = 1

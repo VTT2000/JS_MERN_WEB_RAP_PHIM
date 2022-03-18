@@ -117,6 +117,15 @@ CGV
 ### ------------------------------------------------
 ### api phim
 GET http://localhost:5000/api/QuanLyPhim/LayDanhSachPhim
+###
+GET http://localhost:5000/api/QuanLyPhim/LayDanhSachPhimPhanTrang?tenPhim=t
+###
+GET http://localhost:5000/api/QuanLyPhim/LayDanhSachPhimTheoNgay?tuNgay=2021-12-01
+
+
+
+
+
 ### api Nguoi dung
 ### lay danh sach loai nguoi dung
 GET http://localhost:5000/api/QuanLyNguoiDung/LayDanhSachLoaiNguoiDung
@@ -157,6 +166,12 @@ GET http://localhost:5000/api/QuanLyRap/LayThongTinHeThongRap?maHeThongRap=621f8
 ###
 GET http://localhost:5000/api/QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRap=621f82d51dbca3e2bd522e12
 ###
+GET http://localhost:5000/api/QuanLyRap/LayThongTinLichChieuPhim?MaPhim=621e042fa2756f3aa2269889
+###
+GET http://localhost:5000/api/QuanLyRap/LayThongTinLichChieuHeThongRap?maHeThongRap=621f82d51dbca3e2bd522e12
+###
+
+
 
 
 

@@ -27,6 +27,10 @@ const MovieSchema = new Schema({
     },
     danhGia: {
         type: Number
+    },
+    daXoa:{
+        type: Boolean,
+        default: false
     }
 })
 
