@@ -413,6 +413,7 @@ router.post('/ThemPhim', verifyToken1, async (req, res) => {
 const multer = require("multer");
 const path = require('path');
 const verifyTokenAdmin = require('../middleware/auth1')
+//http://localhost:5000/uploads/images/1.png
 router.post('/ThemPhimUploadHinh', async (req, res) => {
     const {
         tenPhim,
@@ -477,7 +478,7 @@ router.post('/ThemPhimUploadHinh', async (req, res) => {
             cb(null, true);
         };
         let upload = multer({ storage: storage, fileFilter: imageFilter }).single('hinhanh');
-        upload(req, res, function (err) {
+        upload(req, res, async function (err) {
             // req.file contains information of uploaded file
             // req.body contains information of text fields, if there were any
             if (req.fileValidationError) {

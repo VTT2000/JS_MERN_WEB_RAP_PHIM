@@ -391,7 +391,7 @@ router.get('/TimKiemNguoiDungPhanTrang', async (req, res) => {
 })
 
 router.get('/ThongTinTaiKhoan', async (req, res) => {
-
+    
 })
 
 router.get('/ThemNguoiDung', async (req, res) => {
