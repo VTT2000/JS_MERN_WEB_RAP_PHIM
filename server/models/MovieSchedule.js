@@ -19,7 +19,8 @@ const MovieScheduleSchema = new Schema({
         ref: 'cinemas'
     },
     thoiLuong:{
-        type: Number
+        type: Number,
+        default: 120
     }
 })
 

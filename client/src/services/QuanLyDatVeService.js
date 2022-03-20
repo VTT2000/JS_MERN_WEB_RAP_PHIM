@@ -1,4 +1,5 @@
 import { baseService } from "./baseService";
+import { GROUPID} from '../util/settings/config'
 import { ThongTinDatVe } from "../_core/models/ThongTinDatVe";
 export class QuanLyDatVeService  extends baseService{
 

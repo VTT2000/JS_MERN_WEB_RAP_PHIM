@@ -1,23 +1,25 @@
 import { Fragment, useEffect } from "react";
 import { Route } from "react-router";
 
+export const UserTemplate = (props) => {
+  //path, exact, Component
 
+  const { Component, ...restProps } = props;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
+  return (
+    <Route
+      {...restProps}
+      render={(propsRoute) => {
+        //props.location,props.history,props.match
 
-export const UserTemplate = (props) => { //path, exact, Component
-
-    const { Component, ...restProps } = props;
-    useEffect(() => {
-        window.scrollTo(0, 0);
-
-    })
-
-    return <Route {...restProps} render={(propsRoute) => { //props.location,props.history,props.match
-
-        return <Fragment>
-            <div className="lg:flex">
-               <Component {...propsRoute} />
-                <div className="hidden lg:flex items-center justify-center bg-indigo-100 flex-1 h-screen">
+        return (
+          <Fragment>
+            <div>
+              <Component {...propsRoute} />
+              {/* <div className="hidden lg:flex items-center justify-center bg-indigo-100 flex-1 h-screen">
                     <div className="max-w-xs transform duration-200 hover:scale-110 cursor-pointer">
                         <svg className="w-5/6 mx-auto" xmlns="http://www.w3.org/2000/svg" id="f080dbb7-9b2b-439b-a118-60b91c514f72" data-name="Layer 1" viewBox="0 0 528.71721 699.76785">
                             <title>Login</title>
@@ -52,11 +54,11 @@ export const UserTemplate = (props) => { //path, exact, Component
                             <path d="M786.797,157.64461s-11.5575-4.20273-27.31774,4.72807l8.40546,2.10136s-12.60819,1.05068-14.18421,17.8616h5.77875s-3.67739,14.70955,0,18.91228l2.364-4.4654,6.82943,13.65887,1.576-6.82944,3.15205,1.05069,2.10137-11.03217s5.25341,7.88012,9.45614,8.40546V195.2065s11.5575,13.13352,15.23489,12.60818l-5.25341-7.35477,7.35477,1.576-3.152-5.25341,18.91228,5.25341-4.20273-5.25341,13.13352,4.20273,6.3041,2.6267s8.9308-20.4883-3.67739-34.67251S798.61712,151.60318,786.797,157.64461Z" transform="translate(-335.6414 -100.11607)" fill="#2f2e41" />
                         </svg>
                     </div>
-                </div>
+                </div> */}
             </div>
-
-
-        </Fragment>
-    }} />
-
-}
+          </Fragment>
+        );
+      }}
+    />
+  );
+};

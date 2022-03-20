@@ -120,9 +120,25 @@ GET http://localhost:5000/api/QuanLyPhim/LayDanhSachPhim
 ###
 GET http://localhost:5000/api/QuanLyPhim/LayDanhSachPhimPhanTrang?tenPhim=t
 ###
-GET http://localhost:5000/api/QuanLyPhim/LayDanhSachPhimTheoNgay?tuNgay=2021-12-01
+GET http://localhost:5000/api/QuanLyPhim/LayDanhSachPhimTheoNgay?tuNgay=01-04-2021&denNgay=27-01-2022&tenPhim=r
 
 
+
+
+
+
+
+
+
+
+
+###
+DELETE http://localhost:5000/api/QuanLyPhim/XoaPhim?MaPhim=621e04d3a2756f3aa226989b
+###
+
+###
+GET http://localhost:5000/api/QuanLyPhim/LayThongTinPhim?MaPhim=621e042fa2756f3aa2269889
+###
 
 
 

@@ -174,7 +174,7 @@ router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
 
 router.get("/LayThongTinLichChieuPhim", async(req, res) =>{
     try {
-        if(!req.query.MaPhim){
+        if(!req.query.maPhim){
             return res
                 .status(200)
                 .json({
@@ -184,7 +184,7 @@ router.get("/LayThongTinLichChieuPhim", async(req, res) =>{
         }
         else{
             // tim ma rap co lich chieu phim
-            const conditionCinemas = await MovieSchedule.find({ movie: req.query.MaPhim}).distinct("cinema")
+            const conditionCinemas = await MovieSchedule.find({ movie: req.query.maPhim}).distinct("cinema")
             // tim ma cac cum rap co lich chieu phim
             const conditionCinemaClusters = await Cinema.find({ _id: conditionCinemas}).distinct("maCumRap")
             // tim ma cac he thong rap co lich chieu phim
@@ -210,7 +210,7 @@ router.get("/LayThongTinLichChieuPhim", async(req, res) =>{
                     heThongRapChieu[x].cumRapChieu[y].hinhAnh = listCLUSTER[y].hinhAnh
                     heThongRapChieu[x].cumRapChieu[y].lichChieuPhim = new Array()
                     for (let z = 0; z < listCinema.length; z++) {
-                        const movieScheduleCinema = await MovieSchedule.find({ movie: req.query.MaPhim}).populate("cinema").find({cinema:listCinema[z]})
+                        const movieScheduleCinema = await MovieSchedule.find({ movie: req.query.maPhim}).populate("cinema").find({cinema:listCinema[z]})
                         if(movieScheduleCinema){
                             var listLichChieuTheoRap = new Array()
                             movieScheduleCinema.forEach(e=>{
@@ -229,7 +229,7 @@ router.get("/LayThongTinLichChieuPhim", async(req, res) =>{
                 }
             }
             // lay movie
-            const movie = await Movie.findOne({_id: req.query.MaPhim})
+            const movie = await Movie.findOne({_id: req.query.maPhim})
             var jsonRespone = new Object()
             jsonRespone.maPhim = movie._id
             jsonRespone.tenPhim = movie.tenPhim

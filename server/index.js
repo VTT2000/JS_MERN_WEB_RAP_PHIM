@@ -2,6 +2,11 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 
+
+const multer = require('multer');
+const path = require('path');
+
+
 // Cac route trang user
 const qlNguoiDungRouter = require('./routes/quanLyNguoiDung')
 const qlPhimRouter = require('./routes/quanLyPhim')
@@ -46,10 +51,38 @@ app.use('/api/QuanLyPhim', qlPhimRouter)
 app.use('/api/QuanLyRap', qlRapRouter)
 app.use('/api/posts', qlPost)
 
+app.use(express.static(__dirname + '/public'));
+
+
+//app.use(express.static('public')); 
+//app.use('/images', express.static('images'));
+
+/*
+app.use('/', function (req, res) {
+    fs.readFile('', function(err, data) {
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.write(data);
+      return res.end();
+})
+*/
+/*
+app.get('/user/:uid/photos/:file', function(req, res){
+    var uid = req.params.uid
+      , file = req.params.file;
+  
+    req.user.mayViewFilesFrom(uid, function(yes){
+      if (yes) {
+        res.sendFile('/uploads/' + uid + '/' + file);
+      } else {
+        res.send(403, 'Sorry! you cant see that.');
+      }
+    });
+  });
+  */
 //app.use('/admin/usertypes', adminUserTypeRouter)
 //app.use('/admin/users', adminUserRouter)
 
-const PORT = 5000
+const PORT = 5000 || process.env.PORT
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
 
