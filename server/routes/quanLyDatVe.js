@@ -236,8 +236,7 @@ router.post('/TaoLichChieu', verifyTokenAdmin, async (req, res) => {
             movie: maPhim,
             ngayChieuGioChieu: ngayMMddYYYYhhmmss,
             giaVe,
-            cinema: maRap,
-            thoiLuong
+            cinema: maRap
         })
         newMovieSchedule.save()
 

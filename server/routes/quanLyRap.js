@@ -210,7 +210,7 @@ router.get("/LayThongTinLichChieuPhim", async(req, res) =>{
                     heThongRapChieu[x].cumRapChieu[y].hinhAnh = listCLUSTER[y].hinhAnh
                     heThongRapChieu[x].cumRapChieu[y].lichChieuPhim = new Array()
                     for (let z = 0; z < listCinema.length; z++) {
-                        const movieScheduleCinema = await MovieSchedule.find({ movie: req.query.maPhim}).populate("cinema").find({cinema:listCinema[z]})
+                        const movieScheduleCinema = await MovieSchedule.find({ movie: req.query.maPhim}).populate("movie").populate("cinema").find({cinema:listCinema[z]})
                         if(movieScheduleCinema){
                             var listLichChieuTheoRap = new Array()
                             movieScheduleCinema.forEach(e=>{
@@ -220,7 +220,7 @@ router.get("/LayThongTinLichChieuPhim", async(req, res) =>{
                                     tenRap: e.cinema.tenRap,
                                     ngayChieuGioChieu: e.ngayChieuGioChieu,
                                     giaVe: e.giaVe,
-                                    thoiLuong: e.thoiLuong
+                                    thoiLuong: e.movie.thoiLuong
                                 })
                             })
                             heThongRapChieu[x].cumRapChieu[y].lichChieuPhim.push(listLichChieuTheoRap)

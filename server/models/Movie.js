@@ -31,6 +31,10 @@ const MovieSchema = new Schema({
     daXoa:{
         type: Boolean,
         default: false
+    },
+    thoiLuong:{
+        type: Number,
+        default: 120
     }
 })
 

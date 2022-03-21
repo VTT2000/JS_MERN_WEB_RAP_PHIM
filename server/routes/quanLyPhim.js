@@ -382,7 +382,8 @@ router.post('/ThemPhim', verifyToken1, async (req, res) => {
             moTa,
             ngayKhoiChieu: ngayMMddYYYY,
             danhGia,
-            daXoa
+            daXoa,
+            thoiLuong
         })
         await newMovie.save()
 
@@ -504,7 +505,8 @@ router.post('/ThemPhimUploadHinh', async (req, res) => {
                 moTa,
                 ngayKhoiChieu: ngayMMddYYYY,
                 danhGia,
-                daXoa
+                daXoa,
+                thoiLuong
             })
             await newMovie.save()
 
@@ -613,7 +615,8 @@ router.post('/CapNhatPhimUpload', verifyTokenAdmin, async (req, res) => {
                 moTa,
                 ngayKhoiChieu: ngayMMddYYYY,
                 danhGia,
-                daXoa
+                daXoa,
+                thoiLuong
             })
             const movieUpdated = await Movie.findOneAndUpdate(
                 { _id: maPhim },
@@ -742,7 +745,8 @@ router.post('/CapNhatPhim', verifyToken1, async (req, res) => {
             moTa,
             ngayKhoiChieu: ngayMMddYYYY,
             danhGia,
-            daXoa
+            daXoa,
+            thoiLuong
         })
         await newMovie.save()
 
@@ -837,7 +841,7 @@ router.get('/LayThongTinPhim', async (req, res) => {
                     newArray[x].tenPhim = listLichChieu[x].movie.tenPhim
                     newArray[x].ngayChieuGioChieu = listLichChieu[x].ngayChieuGioChieu
                     newArray[x].giaVe = listLichChieu[x].giaVe
-                    newArray[x].thoiLuong = listLichChieu[x].thoiLuong
+                    newArray[x].thoiLuong = listLichChieu[x].movie.thoiLuong
                     newArray[x].thongTinRap = new Object()
                     newArray[x].thongTinRap.maRap = listLichChieu[x].cinema._id
                     newArray[x].thongTinRap.tenRap = listLichChieu[x].cinema.tenRap

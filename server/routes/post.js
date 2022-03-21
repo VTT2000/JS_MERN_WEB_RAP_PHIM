@@ -4,6 +4,8 @@ const argon2 = require('argon2')
 const jwt = require('jsonwebtoken')
 const verifyToken = require('../middleware/auth1')
 
+const Seat = require('../models/Seat')
+const TypeSeat = require('../models/TypeSeat')
 const UserType = require('../models/UserType')
 const User = require('../models/User')
 const Movie = require('../models/Movie')
@@ -12,6 +14,14 @@ const Cinema = require('../models/Cinema')
 const CinemaCluster = require('../models/CinemaCluster')
 const CinemaSystem = require('../models/CinemaSystem')
 const BookTicket = require('../models/BookTicket')
+
+
+router.get('/TypeSeat/1', async (req, res) =>{
+    var data = [{tenLoaiGhe: "Vip"}, { tenLoaiGhe: "Thuong"}]
+    var dataInsert = TypeSeat.collection.insertMany(data)
+    return res.status(200).json({content: dataInsert})
+})
+
 
 
 router.post('/UserType', async (req, res) => {
