@@ -9,8 +9,7 @@ const BookTicketSchema = new Schema({
     maNguoiDung:{
         type: Schema.Types.ObjectId,
         ref: 'users'
-    },
-    danhSachVe: []
+    }
 })
 
 module.exports = mongoose.model('bookTickets', BookTicketSchema)
