@@ -11,6 +11,7 @@ const path = require('path');
 const qlNguoiDungRouter = require('./routes/quanLyNguoiDung')
 const qlPhimRouter = require('./routes/quanLyPhim')
 const qlRapRouter = require('./routes/quanLyRap')
+const qlDatVe = require('./routes/quanLyDatVe')
 const qlPost = require('./routes/post')
 
 // Cac route trang admin
@@ -49,6 +50,7 @@ app.use(function(req, res, next) {
 app.use('/api/QuanLyNguoiDung', qlNguoiDungRouter)
 app.use('/api/QuanLyPhim', qlPhimRouter)
 app.use('/api/QuanLyRap', qlRapRouter)
+app.use('/api/QuanLyDatVe', qlDatVe)
 app.use('/api/posts', qlPost)
 
 app.use(express.static(__dirname + '/public'));

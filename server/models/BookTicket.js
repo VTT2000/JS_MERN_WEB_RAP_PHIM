@@ -9,6 +9,10 @@ const BookTicketSchema = new Schema({
     maNguoiDung:{
         type: Schema.Types.ObjectId,
         ref: 'users'
+    },
+    ngayDat:{
+        type: Date,
+        default: Date.now
     }
 })
 

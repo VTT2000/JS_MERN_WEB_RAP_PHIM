@@ -7,7 +7,11 @@ const MovieSchedule = require('../models/MovieSchedule')
 const BookTicket = require('../models/BookTicket')
 const User = require('../models/User');
 const verifyTokenAdmin = require('../middleware/auth1')
-const verifyToken = require('../models/auth0')
+const verifyToken = require('../middleware/auth0')
+const ListSeatBook = require('../models/ListSeatBook')
+const Seat = require('../models/Seat')
+const { populate } = require('../models/User')
+const Movie = require('../models/Movie')
 
 //-------------------------------------------------
 router.get('/LayDanhSachPhongVe', async (req, res) => {
@@ -41,41 +45,50 @@ router.get('/LayDanhSachPhongVe', async (req, res) => {
         list0.diaChi = lichChieu.cinema.maCumRap.diaChi
         list0.tenPhim = lichChieu.movie.tenPhim
         list0.hinhAnh = lichChieu.movie.hinhAnh
-        list0.ngayChieu = lichChieu.ngayChieuGioChieu.substring(0, 10).replaceAll("-", "/")
-        list0.gioChieu = lichChieu.ngayChieuGioChieu.substring(11, 16)
-        var list1 = new Array()
-        const danhSachSeats = await BookTicket.find({ maLichChieu: req.query.MaLichChieu })
+        var ngayChieu0 = lichChieu.ngayChieuGioChieu
+        list0.ngayChieu = ngayChieu0.getDate() +"/"+ ngayChieu0.getMonth() +"/"+ ngayChieu0.getFullYear()
+        list0.gioChieu = ngayChieu0.getHours() +":"+ ngayChieu0.getMinutes() +":"+ ngayChieu0.getSeconds()
+
+
+        const danhSachSeatCinemas = await Seat.find({ maRap: lichChieu.cinema._id })
             .populate({
-                path: 'maNguoiDung'
+                path: "maLoaiGhe"
             })
+        const condion1 = await BookTicket.find({maLichChieu: req.query.MaLichChieu}).distinct("_id")
+        var list1 = new Array()
+        for (let x = 0; x < danhSachSeatCinemas.length; x++) {
+            const seat = danhSachSeatCinemas[x]
+            const temp = new Object()
+            temp.maGhe = seat._id
+            temp.tenGhe = seat.tenGhe
+            temp.maRap = seat.maRap
+            temp.loaiGhe = seat.maLoaiGhe.tenLoaiGhe
+            temp.stt = seat.stt
+            const gheDat = await ListSeatBook.findOne({ maDatVe: condion1, maGhe: seat._id })
             .populate({
-                path: 'maLichChieu',
-                populate: {
-                    path: 'cinema',
-                    populate: {
-                        path: 'maCumRap',
-                        populate: {
-                            path: 'maHeThongRap'
-                        }
-                    }
+                path: "maDatVe",
+                populate:{
+                    path: "maNguoiDung"
                 }
             })
-        for (let x = 0; x < danhSachSeats.length; x++) {
-            const show = danhSachSeats[x]
-            for (let y = 0; y < danhSachSeats[x].danhSachVe.length; y++) {
-                list1.push({
-                    maGhe: show.danhSachVe[y].maGhe,
-                    tenGhe: null,
-                    maRap: show.maLichChieu.cinema._id,
-                    loaiGhe: null,
-                    stt: null,
-                    giaVe: show.danhSachVe[y].giaVe,
-                    daDat: true,
-                    taiKhoanNguoiDat: show.maNguoiDung.taiKhoan
-                })
+            if(!gheDat){
+                if(seat.maLoaiGhe.tenLoaiGhe == "Vip"){
+                    temp.giaVe = lichChieu.giaVe + 15000
+                }
+                else{
+                    temp.giaVe = lichChieu.giaVe
+                    
+                }
+                temp.daDat = false
+                temp.taiKhoanNguoiDat = null
             }
+            else{
+                temp.giaVe = gheDat.giaVe
+                temp.daDat = gheDat.daDat
+                temp.taiKhoanNguoiDat = gheDat.maDatVe.maNguoiDung.taiKhoan
+            }
+            list1.push(temp)
         }
-
         var result = new Object()
         result.thongTinPhim = list0
         result.danhSachGhe = list1
@@ -112,7 +125,7 @@ router.post('/DatVe', verifyToken, async (req, res) => {
     }
 
     try {
-        const userId = await User.find({ taiKhoan: taiKhoanNguoiDung })
+        const userId = await User.findOne({ taiKhoan: taiKhoanNguoiDung })
         if (!userId) {
             return res
                 .status(400)
@@ -134,49 +147,56 @@ router.post('/DatVe', verifyToken, async (req, res) => {
             maLichChieu: maLichChieu,
             maNguoiDung: userId._id
         })
+        var dateNow = Date.now()
         if (!bookTicketId) {
             const newBookTicket = new BookTicket({
                 maLichChieu: maLichChieu,
                 maNguoiDung: userId._id,
-                danhSachVe: danhSachVe
+                ngayDat: dateNow
             })
             await newBookTicket.save()
+            for (let x = 0; x < danhSachVe.length; x++) {
+                const newListSeatBook = new ListSeatBook({
+                    maDatVe: newBookTicket._id,
+                    maGhe: danhSachVe[x].maGhe,
+                    giaVe: danhSachVe[x].giaVe,
+                    daDat: true
+                })
+                await newListSeatBook.save()
+            }
         }
         else {
-            var newArray = new Array()
-            newArray = bookTicketId.danhSachVe
+            const update = await BookTicket.findOneAndUpdate({_id: bookTicketId._id},{ngayDat: Date.now()},{new: true})
             for (let x = 0; x < danhSachVe.length; x++) {
-                if (!bookTicketId.danhSachVe.indexOf(danhSachVe[x])) {
-                    newArray.push(danhSachVe[x])
+                const existListSeatBook = await ListSeatBook.findOne({
+                    maDatVe: bookTicketId._id,
+                    maGhe: danhSachVe[x].maGhe
+                })
+                const newListSeatBook = new ListSeatBook({
+                    maDatVe: bookTicketId._id,
+                    maGhe: danhSachVe[x].maGhe,
+                    giaVe: danhSachVe[x].giaVe,
+                    daDat: true
+                })
+                if (!existListSeatBook) {
+                    await newListSeatBook.save()
+                }
+                else{
+                    const update0 = await ListSeatBook.findOneAndUpdate({_id: existListSeatBook._id},{
+                        maDatVe: bookTicketId._id,
+                        maGhe: danhSachVe[x].maGhe,
+                        giaVe: danhSachVe[x].giaVe,
+                        daDat: true
+                    },{new: true})
                 }
             }
-            var upBookTicket = BookTicket.findOneAndUpdate(
-                { _id: bookTicketId._id },
-                {
-                    maLichChieu: bookTicketId._id,
-                    maNguoiDung: userId._id,
-                    danhSachVe: newArray
-                },
-                { new: true }
-            )
-            if (!upBookTicket) {
-                return res
-                    .status(401)
-                    .json({
-                        message: "Xử lý thất bại",
-                        content: "Đặt vé không thành công (error up)"
-                    })
-            }
-            else {
-                return res
-                    .status(200)
-                    .json({
-                        message: "Xử lý thành công",
-                        content: "Đặt vé thành công"
-                    })
-            }
         }
-
+        return res
+            .status(200)
+            .json({
+                message: "Xử lý thành công",
+                content: "Đặt vé thành công"
+            })
     } catch (error) {
         console.log(error)
         res.status(500).json({ success: false, message: 'Intenal server error' })
@@ -200,6 +220,15 @@ router.post('/TaoLichChieu', verifyTokenAdmin, async (req, res) => {
     }
 
     try {
+        if(!(75000<=giaVe && giaVe <=200000)){
+            return res
+            .status(400)
+            .json({
+                message: "Xử lý thất bại",
+                content: "Giá vé phải từ 75000 -> 200000"
+            })
+        }
+
         const regex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4} ([0-1]?[0-9]|2?[0-3]):([0-5]\d):([0-5]\d)$/
         if (ngayChieuGioChieu.match(regex) === null) {
             return res
@@ -209,28 +238,35 @@ router.post('/TaoLichChieu', verifyTokenAdmin, async (req, res) => {
                     content: "Ngày không hợp lệ, Ngày có định dạng dd/MM/yyyy hh:mm:ss!"
                 })
         }
-        var ngayMMddYYYYhhmmss = ngayChieuGioChieu.substring(3, 6) + ngayChieuGioChieu.substring(0, 3) + ngayChieuGioChieu.substring(6, 10)
-            + "T" + ngayChieuGioChieu.substring(11, 19)
-
-        var between0 = parseInt(ngayMMddYYYYhhmmss.substring(11, 13), 0)
-        var start0 = ngayMMddYYYYhhmmss.substring(0, 11) + (between0 - 2) + ngayMMddYYYYhhmmss.substring(13, 19)
-        var end0 = ngayMMddYYYYhhmmss.substring(0, 11) + (between0 + 2) + ngayMMddYYYYhhmmss.substring(13, 19)
-
-        const existMovieSchedule = await MovieSchedule.find({
-            maRap: maRap,
-            ngayChieuGioChieu: {
-                $gte: start0,
-                $lte: end0
-            }
-        })
-
-        if (existMovieSchedule) {
-            return res
+        var ngayMMddYYYYhhmmss = new Date(
+            parseInt(ngayChieuGioChieu.substring(6, 10),0),
+            parseInt(ngayChieuGioChieu.substring(3, 5),0),
+            parseInt(ngayChieuGioChieu.substring(0, 2),0),
+            parseInt(ngayChieuGioChieu.substring(11, 13),0),
+            parseInt(ngayChieuGioChieu.substring(14, 16),0),
+            parseInt(ngayChieuGioChieu.substring(17, 19),0)
+        )
+        const timePhim = await Movie.findOne({_id: maPhim}).distinct("thoiLuong")
+        var start0 = new Date(ngayMMddYYYYhhmmss)
+        var end0 = new Date(ngayMMddYYYYhhmmss)
+        end0.setHours(ngayMMddYYYYhhmmss.getHours()+(timePhim/60))
+        const movieSchedule = await MovieSchedule.find({
+            maRap: maRap
+        }).populate("movie")
+        for (let x = 0; x < movieSchedule.length; x++) {
+            const e = movieSchedule[x];
+            const start1 = new Date(e.ngayChieuGioChieu)
+            const condionTime0 = (start0<= start1 && start1 <= end0)
+            const end1 = new Date(start1.setHours(start1.getHours()+(e.movie.thoiLuong/60))) 
+            const condionTime1 = (start0<= end1 && end1 <= end0) 
+            if(condionTime0 || condionTime1){
+                return res
                 .status(400)
                 .json({
                     message: "Xử lý thất bại",
-                    content: "Lịch chiếu đã bị trùng"
+                    content: "Lịch chiếu đã bị trùng với /"+e._id+"/"+e.ngayChieuGioChieu 
                 })
+            }
         }
         const newMovieSchedule = new MovieSchedule({
             movie: maPhim,

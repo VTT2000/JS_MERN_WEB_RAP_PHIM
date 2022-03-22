@@ -16,10 +16,65 @@ const CinemaSystem = require('../models/CinemaSystem')
 const BookTicket = require('../models/BookTicket')
 
 
-router.get('/TypeSeat/1', async (req, res) =>{
-    var data = [{tenLoaiGhe: "Vip"}, { tenLoaiGhe: "Thuong"}]
-    var dataInsert = TypeSeat.collection.insertMany(data)
-    return res.status(200).json({content: dataInsert})
+router.get('/TypeSeat/1', async (req, res) => {
+    const data0 = await TypeSeat.find()
+    if (data0.length > 0) {
+        return res.status(200).json({ message: "Đã có data", content: data0 })
+    }
+    else {
+        var data = new Array()
+        var loaiGhe1 = new TypeSeat()
+        loaiGhe1.tenLoaiGhe = "Vip"
+        data.push(loaiGhe1)
+        var loaiGhe2 = new TypeSeat() 
+        loaiGhe2.tenLoaiGhe = "Thuong"
+        data.push(loaiGhe2)
+        TypeSeat.collection.insertMany(data)
+        return res.status(200).json({ message: "Đã bổ sung data" })
+    }
+})
+
+router.get('/Seat/1', async (req, res) => {
+    //var idCinema = "621f84ae1dbca3e2bd522e24"
+    //var idCinema = "621f84ae1dbca3e2bd522e24"
+    //var idCinema = "621f84b31dbca3e2bd522e27"
+    //var idCinema = "621f84edbea3bb3bd17157f3"
+    //var idCinema = "621f84f2bea3bb3bd17157f6"
+    //var idCinema = "621f855326b6a26342ff7419"
+    //var idCinema = "621f855726b6a26342ff741c"
+    //var idCinema = "621f857326b6a26342ff7420"
+    var idCinema = "621f857826b6a26342ff7423"
+    const data0 = await Seat.find({ maRap: idCinema })
+    if (data0.length > 0) {
+        return res.status(200).json({ message: "Đã có data", content: data0 })
+    }
+    else {
+        var data = new Array()
+        for (let x = 0; x < 160; x++) {
+            var temp = new Seat()
+            temp.tenGhe = (x + 1).toString()
+            temp.maRap = idCinema
+            const conditionGheVip =
+                (35 <= (x + 1) && (x + 1) <= 46) ||
+                (51 <= (x + 1) && (x + 1) <= 62) ||
+                (67 <= (x + 1) && (x + 1) <= 78) ||
+                (83 <= (x + 1) && (x + 1) <= 94) ||
+                (99 <= (x + 1) && (x + 1) <= 110) ||
+                (115 <= (x + 1) && (x + 1) <= 126)
+            if (conditionGheVip) {
+                // khoang ghe Vip
+                temp.maLoaiGhe = "62397e0bec4a75b2cb1776af"
+            }
+            else {
+                // khoang ghe thuong
+                temp.maLoaiGhe = "62397e0bec4a75b2cb1776b0"
+            }
+            temp.stt = (x + 1).toString()
+            data.push(temp)
+        }
+        Seat.collection.insertMany(data)
+        return res.status(200).json({ message: "Đã bổ sung data"})
+    }
 })
 
 
@@ -253,7 +308,7 @@ router.post('/MovieSchedule', async (req, res) => {
     } = req.body
 
     try {
-        
+
         const newMovieSchedule = new MovieSchedule({
             movie,
             ngayChieuGioChieu,

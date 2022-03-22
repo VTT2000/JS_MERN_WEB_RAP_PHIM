@@ -1,4 +1,9 @@
 ### api bo sung nhanh csdl ko phải api chương trình
+GET http://localhost:5000/api/posts/TypeSeat/1
+###
+GET http://localhost:5000/api/posts/Seat/1
+
+###
 POST http://localhost:5000/api/posts/MovieSchedule
 Content-Type: application/json
 
@@ -115,6 +120,44 @@ CGV
 ###
 
 ### ------------------------------------------------
+### api dat ve
+GET http://localhost:5000/api/QuanLyDatVe/LayDanhSachPhongVe?MaLichChieu=6231dd3443d9459ca23eb4b3
+###
+6231dd1443d9459ca23eb4af
+6231dd2643d9459ca23eb4b1
+6231dd3443d9459ca23eb4b3
+6231ddc243d9459ca23eb4b5
+6239e1a9356a2569721478d8
+###
+POST http://localhost:5000/api/QuanLyDatVe/DatVe
+Content-Type: application/json
+
+{
+    "maLichChieu": "6231dd1443d9459ca23eb4af",
+    "danhSachVe": [
+        {
+            "maGhe": "62397ee140922dccf666b673",
+            "giaVe": 75000
+        },
+        {
+            "maGhe": "62397ee140922dccf666b695",
+            "giaVe": 90000
+        }
+    ],
+    "taiKhoanNguoiDung": "123@111"
+}
+###
+POST http://localhost:5000/api/QuanLyDatVe/TaoLichChieu
+Content-Type: application/json
+
+{
+    "maPhim": "621e040da2756f3aa2269880",
+    "ngayChieuGioChieu": "18/09/2021 15:20:00",
+    "maRap": "621f84ae1dbca3e2bd522e24",
+    "giaVe": "75000"
+}
+###
+
 ### api phim
 GET http://localhost:5000/api/QuanLyPhim/LayDanhSachPhim
 ###
@@ -144,6 +187,14 @@ GET http://localhost:5000/api/QuanLyPhim/LayThongTinPhim?MaPhim=621e042fa2756f3a
 
 ### api Nguoi dung
 ### lay danh sach loai nguoi dung
+POST http://localhost:5000/api/QuanLyNguoiDung/ThongTinTaiKhoan
+Content-Type: application/json
+
+{
+    "taiKhoan": "123@111"
+}
+
+###
 GET http://localhost:5000/api/QuanLyNguoiDung/LayDanhSachLoaiNguoiDung
 ### dang nhap
 POST http://localhost:5000/api/QuanLyNguoiDung/DangNhap
@@ -151,7 +202,7 @@ Content-Type: application/json
 
 {
     "taiKhoan": "12312312311ggg",
-    "matKhau": "sssssssssssa1"
+    "matKhau": "123456"
 }
 ### dang ky khach hang
 POST http://localhost:5000/api/QuanLyNguoiDung/DangKy

@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const argon2 = require('argon2')
 const jwt = require('jsonwebtoken')
-const verifyToken1 = require('../middleware/auth1')
+const verifyTokenAdmin = require('../middleware/auth1')
 //const fs = require('node:fs')
 //const buffer = require('node:buffer')
 
@@ -147,7 +147,11 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
                             content: "Ngày không hợp lệ, Ngày có định dạng dd/MM/yyyy !"
                         })
                 }
-                start0 = req.query.tuNgay.substring(3, 6) + req.query.tuNgay.substring(0, 3) + req.query.tuNgay.substring(6, 10)
+                start0 = new Date(
+                    parseInt(req.query.tuNgay.substring(6, 10),0),
+                    parseInt(req.query.tuNgay.substring(3, 5),0),
+                    parseInt(req.query.tuNgay.substring(0, 2),0)
+                ) 
             }
             else {
                 start0 = new Date()
@@ -162,7 +166,11 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
                             content: "Ngày không hợp lệ, Ngày có định dạng dd/MM/yyyy !"
                         })
                 }
-                end0 = req.query.denNgay.substring(3, 6) + req.query.denNgay.substring(0, 3) + req.query.denNgay.substring(6, 10)
+                end0 = new Date(
+                    parseInt(req.query.denNgay.substring(6, 10),0),
+                    parseInt(req.query.denNgay.substring(3, 5),0),
+                    parseInt(req.query.denNgay.substring(0, 2),0)
+                )
 
                 list = await Movie.find({
                     tenPhim:
@@ -231,7 +239,11 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
                             content: "Ngày không hợp lệ, Ngày có định dạng dd/MM/yyyy !"
                         })
                 }
-                start0 = req.query.tuNgay.substring(3, 6) + req.query.tuNgay.substring(0, 3) + req.query.tuNgay.substring(6, 10)
+                start0 = new Date(
+                    parseInt(req.query.tuNgay.substring(6, 10),0),
+                    parseInt(req.query.tuNgay.substring(3, 5),0),
+                    parseInt(req.query.tuNgay.substring(0, 2),0)
+                ) 
             }
             else {
                 start0 = new Date()
@@ -246,7 +258,11 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
                             content: "Ngày không hợp lệ, Ngày có định dạng dd/MM/yyyy !"
                         })
                 }
-                end0 = req.query.denNgay.substring(3, 6) + req.query.denNgay.substring(0, 3) + req.query.denNgay.substring(6, 10)
+                end0 = new Date(
+                    parseInt(req.query.denNgay.substring(6, 10),0),
+                    parseInt(req.query.denNgay.substring(3, 5),0),
+                    parseInt(req.query.denNgay.substring(0, 2),0)
+                )
 
                 list = await Movie.find({
                     tenPhim:
@@ -310,7 +326,7 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
     }
 })
 
-router.post('/ThemPhim', verifyToken1, async (req, res) => {
+router.post('/ThemPhim', verifyTokenAdmin, async (req, res) => {
     const {
         tenPhim,
         biDanh,
@@ -352,7 +368,11 @@ router.post('/ThemPhim', verifyToken1, async (req, res) => {
                     content: "Ngày không hợp lệ, Ngày có định dạng dd/MM/yyyy !"
                 })
         }
-        var ngayMMddYYYY = ngayKhoiChieu.substring(3, 6) + ngayKhoiChieu.substring(0, 3) + ngayKhoiChieu.denNgay.substring(6, 10)
+        var ngayMMddYYYY = new Date(
+            parseInt(ngayKhoiChieu.substring(6, 10),0),
+            parseInt(ngayKhoiChieu.substring(3, 5),0),
+            parseInt(ngayKhoiChieu.substring(0, 2),0)
+        )
 
         const regexHinhAnh = /[^"']+\.(?:(?:pn|jpe?)g|gif)\b/;
         if (hinhAnh.match(regexHinhAnh) === null) {
@@ -363,16 +383,6 @@ router.post('/ThemPhim', verifyToken1, async (req, res) => {
                     content: "Link hình ảnh không hợp lệ, định dạng là png,jpg,jpeg,gif !"
                 })
         }
-        /*
-        var filepath = '../public/image/'
-        var filepathFull = filepath + hinhAnh.name
-        var file_temp = hinhAnh.tmp_name
-        const data = new Uint8Array(buffer.from(file_temp));
-        fs.writeFile(filepathFull, data,(err) => {
-            if (err) throw err
-            console.log('The file has been saved!')
-        })
-        */
 
         const newMovie = new Movie({
             tenPhim,
@@ -413,7 +423,6 @@ router.post('/ThemPhim', verifyToken1, async (req, res) => {
 ///--------------------------------------------------
 const multer = require("multer");
 const path = require('path');
-const verifyTokenAdmin = require('../middleware/auth1')
 //http://localhost:5000/uploads/images/1.png
 router.post('/ThemPhimUploadHinh', async (req, res) => {
     const {
@@ -459,7 +468,11 @@ router.post('/ThemPhimUploadHinh', async (req, res) => {
                     content: "Ngày không hợp lệ, Ngày có định dạng dd/MM/yyyy !"
                 })
         }
-        var ngayMMddYYYY = ngayKhoiChieu.substring(3, 6) + ngayKhoiChieu.substring(0, 3) + ngayKhoiChieu.substring(6, 10)
+        var ngayMMddYYYY = new Date(
+            parseInt(ngayKhoiChieu.substring(6, 10),0),
+            parseInt(ngayKhoiChieu.substring(3, 5),0),
+            parseInt(ngayKhoiChieu.substring(0, 2),0)
+        )
         // up hinh https://stackabuse.com/handling-file-uploads-in-node-js-with-expres-and-multer/
         const storage = multer.diskStorage({
             destination: function (req, file, cb) {
@@ -569,7 +582,11 @@ router.post('/CapNhatPhimUpload', verifyTokenAdmin, async (req, res) => {
                     content: "Ngày không hợp lệ, Ngày có định dạng dd/MM/yyyy !"
                 })
         }
-        var ngayMMddYYYY = ngayKhoiChieu.substring(3, 6) + ngayKhoiChieu.substring(0, 3) + ngayKhoiChieu.substring(6, 10)
+        var ngayMMddYYYY = new Date(
+            parseInt(ngayKhoiChieu.substring(6, 10),0),
+            parseInt(ngayKhoiChieu.substring(3, 5),0),
+            parseInt(ngayKhoiChieu.substring(0, 2),0)
+        )
         // up hinh https://stackabuse.com/handling-file-uploads-in-node-js-with-expres-and-multer/
         const storage = multer.diskStorage({
             destination: function (req, file, cb) {
@@ -673,7 +690,7 @@ router.post('/CapNhatPhimUpload', verifyTokenAdmin, async (req, res) => {
 
 
 
-router.post('/CapNhatPhim', verifyToken1, async (req, res) => {
+router.post('/CapNhatPhim', verifyTokenAdmin, async (req, res) => {
     const {
         tenPhim,
         biDanh,
@@ -715,7 +732,11 @@ router.post('/CapNhatPhim', verifyToken1, async (req, res) => {
                     content: "Ngày không hợp lệ, Ngày có định dạng dd/MM/yyyy !"
                 })
         }
-        var ngayMMddYYYY = req.query.denNgay.substring(3, 6) + req.query.denNgay.substring(0, 3) + req.query.denNgay.substring(6, 10)
+        var ngayMMddYYYY = new Date(
+            parseInt(ngayKhoiChieu.substring(6, 10),0),
+            parseInt(ngayKhoiChieu.substring(3, 5),0),
+            parseInt(ngayKhoiChieu.substring(0, 2),0)
+        )
 
         const regexHinhAnh = /[^"']+\.(?:(?:pn|jpe?)g|gif)\b/;
         if (hinhAnh.match(regexHinhAnh) === null) {
@@ -773,7 +794,7 @@ router.post('/CapNhatPhim', verifyToken1, async (req, res) => {
     }
 })
 
-router.delete('/XoaPhim', verifyToken1, async (req, res) => {
+router.delete('/XoaPhim', verifyTokenAdmin, async (req, res) => {
     try {
         const moviedeleted = await Movie.findOneAndUpdate({ _id: req.query.MaPhim, daXoa: false }, { daXoa: true }, { new: true })
         // xoa thuc su
