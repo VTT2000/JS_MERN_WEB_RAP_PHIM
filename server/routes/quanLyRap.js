@@ -100,13 +100,10 @@ router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
     try {
         if (!req.query.maHeThongRap) {
             // Tim he thong rap co lich chieu
-            const condition0 = await MovieSchedule.find().populate({
-                path: "cinema",
-                populate: {
-                    path: "maCumRap",
-                    distinct: "maHeThongRap"
-                }
-            })
+            const condition2 = await MovieSchedule.find().distinct("cinema")
+            const condition1 = await Cinema.find({ _id: condition2}).distinct("maCumRap")
+            const condition0 = await CinemaCluster.find({ _id: condition1}).distinct("maHeThongRap")
+            
             var jsonResponeList = new Array()
             for (let x = 0; x < condition0.length; x++) {
                 const idHeThongRap = condition0[x];
@@ -153,6 +150,7 @@ router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
 
                 }
                 // lay CinemaSystem
+                
                 const cinemaSystem = await CinemaSystem.findOne({ _id: idHeThongRap })
                 var jsonRespone = new Object()
                 jsonRespone.maHeThongRap = cinemaSystem._id
@@ -166,8 +164,7 @@ router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
                 .status(200)
                 .json({
                     message: "Xử lý thành công",
-                    content: condition0,
-                    content2: jsonResponeList
+                    content: jsonResponeList
                 })
         }
         else {

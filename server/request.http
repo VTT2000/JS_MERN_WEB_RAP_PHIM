@@ -11,7 +11,7 @@ Content-Type: application/json
     "movie":"621e040da2756f3aa2269880",
     "ngayChieuGioChieu":"2021-10-18T05:05:05",
     "giaVe":"75000",
-    "cinema":"621f84ae1dbca3e2bd522e24",
+    "cinema":"621f857826b6a26342ff7423",
     "thoiLuong":"120"
 }
 ###
@@ -235,7 +235,9 @@ GET http://localhost:5000/api/QuanLyRap/LayThongTinCumRapTheoHeThong?maHeThongRa
 ###
 GET http://localhost:5000/api/QuanLyRap/LayThongTinLichChieuPhim?MaPhim=621e042fa2756f3aa2269889
 ###
-GET http://localhost:5000/api/QuanLyRap/LayThongTinLichChieuHeThongRap?maHeThongRap=621f82d51dbca3e2bd522e12
+GET http://localhost:5000/api/QuanLyRap/LayThongTinLichChieuHeThongRap
+###
+?maHeThongRap=621f82d51dbca3e2bd522e12
 ###
 
 
