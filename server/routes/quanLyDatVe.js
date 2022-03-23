@@ -115,17 +115,17 @@ router.post('/DatVe', verifyToken, async (req, res) => {
         taiKhoanNguoiDung
     } = req.body
 
-    if (!maLichChieu || !danhSachVe || !taiKhoanNguoiDung) {
+    if (!maLichChieu || !danhSachVe) {
         return res
             .status(400)
             .json({
                 message: "Xử lý thất bại",
-                content: "Missing maLichChieu and/ or danhSachVe, maRap and/ or taiKhoanNguoiDung"
+                content: "Missing maLichChieu and/ or danhSachVe and/ or taiKhoanNguoiDung"
             })
     }
 
     try {
-        const userId = await User.findOne({ taiKhoan: taiKhoanNguoiDung })
+        const userId = await User.findOne({ _id: req.userId })
         if (!userId) {
             return res
                 .status(400)
