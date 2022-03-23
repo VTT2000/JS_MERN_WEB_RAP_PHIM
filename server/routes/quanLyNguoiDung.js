@@ -108,8 +108,7 @@ router.post('/DangKy', async (req, res) => {
         hoTen,
         email,
         soDt,
-        matKhau,
-        maLoaiNguoiDung
+        matKhau
     } = req.body
 
     // Simple validation
@@ -122,12 +121,12 @@ router.post('/DangKy', async (req, res) => {
             })
     }
 
-    if (!hoTen || !soDt || !maLoaiNguoiDung) {
+    if (!hoTen || !soDt || !email) {
         return res
             .status(400)
             .json({
                 message: "Xử lý thất bại",
-                content: "Missing hoTen and/or soDt and/or maLoaiNguoiDung"
+                content: "Missing hoTen and/or soDt and/or email"
             })
     }
 
@@ -171,7 +170,7 @@ router.post('/DangKy', async (req, res) => {
             email,
             soDt,
             matKhau: hashedPassword,
-            maLoaiNguoiDung
+            maLoaiNguoiDung: "621e157542c18eb1e10d3272"
         })
         await newUser.save()
 

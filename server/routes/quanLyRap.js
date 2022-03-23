@@ -8,13 +8,15 @@ const CinemaCluster = require('../models/CinemaCluster')
 const Cinema = require('../models/Cinema')
 const MovieSchedule = require('../models/MovieSchedule')
 const Movie = require('../models/Movie')
+const e = require('express')
+const { populate } = require('../models/CinemaSystem')
 
 
 
 //-------------------------------------------------
 router.get('/LayThongTinHeThongRap', async (req, res) => {
     try {
-        if(req.query.maHeThongRap == null){
+        if (req.query.maHeThongRap == null) {
             const cinemaSystems = await CinemaSystem.find()
             var listJsonRespone = new Array()
             cinemaSystems.forEach(e => {
@@ -27,7 +29,7 @@ router.get('/LayThongTinHeThongRap', async (req, res) => {
                     }
                 )
             })
-    
+
             return res
                 .status(200)
                 .json({
@@ -35,8 +37,8 @@ router.get('/LayThongTinHeThongRap', async (req, res) => {
                     content: listJsonRespone
                 })
         }
-        else{
-            const cinemaSystems = await CinemaSystem.find({_id: req.query.maHeThongRap})
+        else {
+            const cinemaSystems = await CinemaSystem.find({ _id: req.query.maHeThongRap })
             return res
                 .status(200)
                 .json({
@@ -52,7 +54,7 @@ router.get('/LayThongTinHeThongRap', async (req, res) => {
 
 router.get('/LayThongTinCumRapTheoHeThong', async (req, res) => {
     try {
-        if(!req.query.maHeThongRap){
+        if (!req.query.maHeThongRap) {
             return res
                 .status(200)
                 .json({
@@ -60,8 +62,8 @@ router.get('/LayThongTinCumRapTheoHeThong', async (req, res) => {
                     content: "Mã hệ thống rạp không tồn tại !"
                 })
         }
-        else{
-            const cinemaClusters = await CinemaCluster.find({ maHeThongRap: req.query.maHeThongRap})
+        else {
+            const cinemaClusters = await CinemaCluster.find({ maHeThongRap: req.query.maHeThongRap })
             var listJsonRespone = new Array()
             cinemaClusters.forEach(e => {
                 listJsonRespone.push(
@@ -80,7 +82,7 @@ router.get('/LayThongTinCumRapTheoHeThong', async (req, res) => {
                 })
                 listJsonRespone[index].danhSachRap = listJsonRespone0
             }
-            
+
             return res
                 .status(200)
                 .json({
@@ -96,21 +98,86 @@ router.get('/LayThongTinCumRapTheoHeThong', async (req, res) => {
 
 router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
     try {
-        if(!req.query.maHeThongRap){
+        if (!req.query.maHeThongRap) {
+            // Tim he thong rap co lich chieu
+            const condition0 = await MovieSchedule.find().populate({
+                path: "cinema",
+                populate: {
+                    path: "maCumRap",
+                    distinct: "maHeThongRap"
+                }
+            })
+            var jsonResponeList = new Array()
+            for (let x = 0; x < condition0.length; x++) {
+                const idHeThongRap = condition0[x];
+                // tim cac rap co lich chieu phim
+                const conditionCinemas = await MovieSchedule.find().distinct("cinema")
+                // tim cac cum rap co lich chieu phim
+                const conditionCinemaClusters0 = await Cinema.find({ _id: conditionCinemas }).distinct("maCumRap")
+                // tim cac cum rap co lich chieu phim theo he thong rap
+                const conditionCinemaClusters1 = await CinemaCluster.find({ _id: conditionCinemaClusters0, maHeThongRap: idHeThongRap })
+                // insertdata
+                var lstCumRap = new Array()
+                for (let x = 0; x < conditionCinemaClusters1.length; x++) {
+                    const cinemaCluster = conditionCinemaClusters1[x]
+                    lstCumRap[x] = new Object
+                    lstCumRap[x].maCumRap = cinemaCluster._id
+                    lstCumRap[x].tenCumRap = cinemaCluster.tenCumRap
+                    lstCumRap[x].diaChi = cinemaCluster.diaChi
+                    lstCumRap[x].danhSachPhim = new Array()
+                    // lay cac rap co lich chieu phim theo he thong rap
+                    const conditionCinemasByIdCinemaCluster = await Cinema.find({ _id: conditionCinemas, maCumRap: cinemaCluster._id }).distinct("_id")
+                    // lay cac phim co lich chieu theo he thong rap
+                    const listMovies = await MovieSchedule.find({ cinema: conditionCinemasByIdCinemaCluster }).distinct("movie")
+                    for (let y = 0; y < listMovies.length; y++) {
+                        const idMOVIE = listMovies[y]
+                        const movie = await Movie.findOne({ _id: idMOVIE })
+                        lstCumRap[x].danhSachPhim[y] = new Object()
+                        lstCumRap[x].danhSachPhim[y].maPhim = movie._id
+                        lstCumRap[x].danhSachPhim[y].tenPhim = movie.tenPhim
+                        lstCumRap[x].danhSachPhim[y].hinhAnh = movie.hinhAnh
+                        lstCumRap[x].danhSachPhim[y].lstLichChieuTheoPhim = new Array()
+                        // lay cac lich chieu cua rap co lich chieu theo he thong rap
+                        const listMovieSchedule = await MovieSchedule.find({ movie: movie._id, cinema: conditionCinemasByIdCinemaCluster }).populate("cinema")
+                        listMovieSchedule.forEach(e => {
+                            lstCumRap[x].danhSachPhim[y].lstLichChieuTheoPhim.push({
+                                maLichChieu: e._id,
+                                maRap: e.cinema._id,
+                                tenRap: e.cinema.tenRap,
+                                ngayChieuGioChieu: e.ngayChieuGioChieu,
+                                giaVe: e.giaVe
+                            })
+                        })
+
+                    }
+
+                }
+                // lay CinemaSystem
+                const cinemaSystem = await CinemaSystem.findOne({ _id: idHeThongRap })
+                var jsonRespone = new Object()
+                jsonRespone.maHeThongRap = cinemaSystem._id
+                jsonRespone.tenHeThongRap = cinemaSystem.tenHeThongRap
+                jsonRespone.logo = cinemaSystem.logo
+                jsonRespone.lstCumRap = lstCumRap
+                jsonResponeList.push(jsonRespone)
+            }
+
             return res
                 .status(200)
                 .json({
-                    message: "Xử lý thất bại",
-                    content: "Mã hệ thống rạp không tồn tại !"
+                    message: "Xử lý thành công",
+                    content: condition0,
+                    content2: jsonResponeList
                 })
         }
-        else{
+        else {
+            const idHeThongRap = req.query.maHeThongRap
             // tim cac rap co lich chieu phim
             const conditionCinemas = await MovieSchedule.find().distinct("cinema")
             // tim cac cum rap co lich chieu phim
-            const conditionCinemaClusters0 = await Cinema.find({_id:conditionCinemas}).distinct("maCumRap")
+            const conditionCinemaClusters0 = await Cinema.find({ _id: conditionCinemas }).distinct("maCumRap")
             // tim cac cum rap co lich chieu phim theo he thong rap
-            const conditionCinemaClusters1 = await CinemaCluster.find({_id: conditionCinemaClusters0, maHeThongRap: req.query.maHeThongRap})
+            const conditionCinemaClusters1 = await CinemaCluster.find({ _id: conditionCinemaClusters0, maHeThongRap: idHeThongRap })
             // insertdata
             var lstCumRap = new Array()
             for (let x = 0; x < conditionCinemaClusters1.length; x++) {
@@ -121,20 +188,20 @@ router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
                 lstCumRap[x].diaChi = cinemaCluster.diaChi
                 lstCumRap[x].danhSachPhim = new Array()
                 // lay cac rap co lich chieu phim theo he thong rap
-                const conditionCinemasByIdCinemaCluster = await Cinema.find({_id:conditionCinemas, maCumRap: cinemaCluster._id}).distinct("_id")
+                const conditionCinemasByIdCinemaCluster = await Cinema.find({ _id: conditionCinemas, maCumRap: cinemaCluster._id }).distinct("_id")
                 // lay cac phim co lich chieu theo he thong rap
-                const listMovies = await MovieSchedule.find({cinema: conditionCinemasByIdCinemaCluster}).distinct("movie")
+                const listMovies = await MovieSchedule.find({ cinema: conditionCinemasByIdCinemaCluster }).distinct("movie")
                 for (let y = 0; y < listMovies.length; y++) {
                     const idMOVIE = listMovies[y]
-                    const movie = await Movie.findOne({_id: idMOVIE})
+                    const movie = await Movie.findOne({ _id: idMOVIE })
                     lstCumRap[x].danhSachPhim[y] = new Object()
                     lstCumRap[x].danhSachPhim[y].maPhim = movie._id
                     lstCumRap[x].danhSachPhim[y].tenPhim = movie.tenPhim
                     lstCumRap[x].danhSachPhim[y].hinhAnh = movie.hinhAnh
                     lstCumRap[x].danhSachPhim[y].lstLichChieuTheoPhim = new Array()
                     // lay cac lich chieu cua rap co lich chieu theo he thong rap
-                    const listMovieSchedule = await MovieSchedule.find({ movie: movie._id, cinema: conditionCinemasByIdCinemaCluster}).populate("cinema")
-                    listMovieSchedule.forEach(e=>{
+                    const listMovieSchedule = await MovieSchedule.find({ movie: movie._id, cinema: conditionCinemasByIdCinemaCluster }).populate("cinema")
+                    listMovieSchedule.forEach(e => {
                         lstCumRap[x].danhSachPhim[y].lstLichChieuTheoPhim.push({
                             maLichChieu: e._id,
                             maRap: e.cinema._id,
@@ -143,19 +210,19 @@ router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
                             giaVe: e.giaVe
                         })
                     })
-                    
+
                 }
 
             }
 
             // lay CinemaSystem
-            const cinemaSystem = await CinemaSystem.findOne({_id:req.query.maHeThongRap})
+            const cinemaSystem = await CinemaSystem.findOne({ _id: idHeThongRap })
             var jsonRespone = new Object()
             jsonRespone.maHeThongRap = cinemaSystem._id
             jsonRespone.tenHeThongRap = cinemaSystem.tenHeThongRap
             jsonRespone.logo = cinemaSystem.logo
             jsonRespone.lstCumRap = lstCumRap
-            
+
             return res
                 .status(200)
                 .json({
@@ -172,9 +239,9 @@ router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
 
 
 
-router.get("/LayThongTinLichChieuPhim", async(req, res) =>{
+router.get("/LayThongTinLichChieuPhim", async (req, res) => {
     try {
-        if(!req.query.maPhim){
+        if (!req.query.maPhim) {
             return res
                 .status(200)
                 .json({
@@ -182,27 +249,27 @@ router.get("/LayThongTinLichChieuPhim", async(req, res) =>{
                     content: "Mã phim không tồn tại !"
                 })
         }
-        else{
+        else {
             // tim ma rap co lich chieu phim
-            const conditionCinemas = await MovieSchedule.find({ movie: req.query.maPhim}).distinct("cinema")
+            const conditionCinemas = await MovieSchedule.find({ movie: req.query.maPhim }).distinct("cinema")
             // tim ma cac cum rap co lich chieu phim
-            const conditionCinemaClusters = await Cinema.find({ _id: conditionCinemas}).distinct("maCumRap")
+            const conditionCinemaClusters = await Cinema.find({ _id: conditionCinemas }).distinct("maCumRap")
             // tim ma cac he thong rap co lich chieu phim
-            const conditionCinemaSystems = await CinemaCluster.find({_id: conditionCinemaClusters}).distinct("maHeThongRap")
+            const conditionCinemaSystems = await CinemaCluster.find({ _id: conditionCinemaClusters }).distinct("maHeThongRap")
             // insert data
             var heThongRapChieu = new Array()
             for (let x = 0; x < conditionCinemaSystems.length; x++) {
                 const idSYSTEM = conditionCinemaSystems[x]
-                const cinemaSystem = await CinemaSystem.find({_id: idSYSTEM})
+                const cinemaSystem = await CinemaSystem.find({ _id: idSYSTEM })
                 heThongRapChieu[x] = new Object()
                 heThongRapChieu[x].maHeThongRap = cinemaSystem._id
                 heThongRapChieu[x].tenHeThongRap = cinemaSystem.tenHeThongRap
                 heThongRapChieu[x].logo = cinemaSystem.logo
-                const listCLUSTER = await CinemaCluster.find({maHeThongRap:idSYSTEM, _id:conditionCinemaClusters})
+                const listCLUSTER = await CinemaCluster.find({ maHeThongRap: idSYSTEM, _id: conditionCinemaClusters })
                 heThongRapChieu[x].cumRapChieu = new Array(listCLUSTER.length)
                 for (let y = 0; y < listCLUSTER.length; y++) {
                     const idCLUSTER = listCLUSTER[y]._id
-                    const listCinema = await Cinema.find({maCumRap:idCLUSTER})
+                    const listCinema = await Cinema.find({ maCumRap: idCLUSTER })
                     heThongRapChieu[x].cumRapChieu[y] = new Object()
                     // xu ly lich chieu phim // code chua xong
                     heThongRapChieu[x].cumRapChieu[y].maCumRap = listCLUSTER[y]._id
@@ -210,10 +277,10 @@ router.get("/LayThongTinLichChieuPhim", async(req, res) =>{
                     heThongRapChieu[x].cumRapChieu[y].hinhAnh = listCLUSTER[y].hinhAnh
                     heThongRapChieu[x].cumRapChieu[y].lichChieuPhim = new Array()
                     for (let z = 0; z < listCinema.length; z++) {
-                        const movieScheduleCinema = await MovieSchedule.find({ movie: req.query.maPhim}).populate("movie").populate("cinema").find({cinema:listCinema[z]})
-                        if(movieScheduleCinema){
+                        const movieScheduleCinema = await MovieSchedule.find({ movie: req.query.maPhim }).populate("movie").populate("cinema").find({ cinema: listCinema[z] })
+                        if (movieScheduleCinema) {
                             var listLichChieuTheoRap = new Array()
-                            movieScheduleCinema.forEach(e=>{
+                            movieScheduleCinema.forEach(e => {
                                 listLichChieuTheoRap.push({
                                     maLichChieu: e._id,
                                     maRap: e.cinema._id,
@@ -229,7 +296,7 @@ router.get("/LayThongTinLichChieuPhim", async(req, res) =>{
                 }
             }
             // lay movie
-            const movie = await Movie.findOne({_id: req.query.maPhim})
+            const movie = await Movie.findOne({ _id: req.query.maPhim })
             var jsonRespone = new Object()
             jsonRespone.maPhim = movie._id
             jsonRespone.tenPhim = movie.tenPhim
