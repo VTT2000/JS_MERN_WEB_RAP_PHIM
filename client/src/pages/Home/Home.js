@@ -17,17 +17,9 @@ export default function Home(props) {
   const dispatch = useDispatch();
   console.log("propsHome", arrFilm);
 
-  // props.match.params
-  // const renderFilms = () => {
-  //     return arrFilm.map((phim, index) => {
-  //         return <Film key={index} />
-
-  //     })
-  // }
-
   useEffect(() => {
     const action = layDanhSachPhimAction();
-    dispatch(action); //dispatch function từ thunk
+    dispatch(action);
 
     dispatch(layDanhSachHeThongRapAction());
   }, []);
@@ -41,7 +33,7 @@ export default function Home(props) {
           <h2 class="title">New In</h2>
           <div class="newIn__content">
             <div class="row">
-              {arrFilm?.slice(2, 6).map((film, index) => {
+              {arrFilm?.slice(4, 8).map((film, index) => {
                 return (
                   <div key={index} class="col-6 col-md-3">
                     <div class="newIn__img">
@@ -80,15 +72,11 @@ export default function Home(props) {
             </div>
           </div>
         </div>
-        {/* <NewIn /> */}
       </div>
 
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto ">
           <MultipleRowSlick arrFilm={arrFilm} />
-          {/* <div className="flex flex-wrap  " style={{ justifyContent: 'center' }}>
-                        {renderFilms()}
-                    </div> */}
         </div>
       </section>
 

@@ -3,7 +3,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { dangKyAction } from "../../redux/actions/QuanLyNguoiDungAction";
-
+import styleLogin from "../Login/Login.module.css";
 export default function Register(props) {
   const dispatch = useDispatch();
 
@@ -26,9 +26,17 @@ export default function Register(props) {
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className="lg:w-1/2 xl:max-w-screen-sm"
+      style={{
+        height: "100%",
+        margin: "0 auto",
+        transform: " translate(10px, 10%)",
+      }}
+      className={`w-1/3  ${styleLogin.form}`}
     >
-      <div className="mt-10 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl">
+      <div
+        style={{ margin: "0 auto" }}
+        className="mt-10 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl"
+      >
         <h2
           className="text-center text-4xl text-indigo-900 font-display font-semibold lg:text-left xl:text-5xl
       xl:text-bold"
@@ -38,19 +46,19 @@ export default function Register(props) {
         <div className="mt-12">
           <div>
             <div>
-              <div className="text-sm font-bold text-gray-700 tracking-wide">
+              <div className="text-xl font-bold text-gray-700 tracking-wide">
                 Tài khoản
               </div>
               <input
                 name="taiKhoan"
                 onChange={formik.handleChange}
-                className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                className={`w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500 ${styleLogin.forminput}`}
                 placeholder="Nhập vào tài khoản"
               />
             </div>
-            <div className="mt-8">
-              <div className="flex justify-between items-center">
-                <div className="text-sm font-bold text-gray-700 tracking-wide">
+            <div className="">
+              <div className="text-xl font-bold text-gray-700 tracking-wide">
+                <div className="text-xl font-bold text-gray-700 tracking-wide">
                   Mật khẩu
                 </div>
               </div>
@@ -58,40 +66,40 @@ export default function Register(props) {
                 type="password"
                 name="matKhau"
                 onChange={formik.handleChange}
-                className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                className={`w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500 ${styleLogin.forminput}`}
                 placeholder="Nhập vào mật khẩu"
               />
             </div>
             <div>
-              <div className="text-sm font-bold text-gray-700 tracking-wide">
+              <div className="text-xl font-bold text-gray-700 tracking-wide">
                 Email
               </div>
               <input
                 name="email"
                 onChange={formik.handleChange}
-                className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                className={`w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500 ${styleLogin.forminput}`}
                 placeholder="Nhập email"
               />
             </div>
             <div>
-              <div className="text-sm font-bold text-gray-700 tracking-wide">
+              <div className="text-xl font-bold text-gray-700 tracking-wide">
                 SDT
               </div>
               <input
                 name="soDt"
                 onChange={formik.handleChange}
-                className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                className={`w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500 ${styleLogin.forminput}`}
                 placeholder="Nhập vào sdt"
               />
             </div>
             <div>
-              <div className="text-sm font-bold text-gray-700 tracking-wide">
+              <div className="text-xl font-bold text-gray-700 tracking-wide">
                 Họ Tên
               </div>
               <input
                 name="hoTen"
                 onChange={formik.handleChange}
-                className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+                className={`w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500 ${styleLogin.forminput}`}
                 placeholder="Nhập họ tên"
               />
             </div>

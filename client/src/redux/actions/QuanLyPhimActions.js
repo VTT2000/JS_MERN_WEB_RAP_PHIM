@@ -10,7 +10,7 @@ export const layDanhSachPhimAction = (tenPhim = "") => {
 
       dispatch({
         type: SET_DANH_SACH_PHIM,
-        arrFilm: result.data.data,
+        arrFilm: result.data.content,
       });
     } catch (errors) {
       console.log("errors", errors);

@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const argon2 = require('argon2')
@@ -9,26 +10,38 @@ const verifyTokenAdmin = require('../middleware/auth1')
 const Movie = require('../models/Movie')
 const MovieSchedule = require('../models/MovieSchedule')
 const CinemaCluster = require('../models/CinemaCluster')
+const UserType = require('../models/UserType')
 
 //-------------------------------------------------
 router.get('/LayDanhSachPhim', async (req, res) => {
     try {
         const movies = await Movie.find({ daXoa: false })
+        var movies0 = movies.map(function(model) { return model.toObject(); });
         var listJsonRespone = new Array()
-        movies.forEach(e => {
+        //var link = "http://localhost:5000/"+goc
+        for (let x = 0; x < movies0.length; x++) {
+            const e = movies0[x];
+            var goc = e.hinhAnh
+            //console.log(e.hinhAnh)
+            if (goc.substring(0,8) == "https://" || goc.substring(0,7) == "http://") {
+                link0 = goc
+            }
+            else {
+                link0 = process.env.HTTPSERVER + process.env.PORT + "/" + goc.substring(7, goc.length)
+            }
             listJsonRespone.push(
                 {
                     maPhim: e._id,
                     tenPhim: e.tenPhim,
                     biDanh: e.biDanh,
                     trailer: e.trailer,
-                    hinhAnh: e.hinhAnh,
+                    hinhAnh: link0,
                     moTa: e.moTa,
                     ngayKhoiChieu: e.ngayKhoiChieu,
                     danhGia: e.danhGia
                 }
             )
-        })
+        }
 
         return res
             .status(200)
@@ -71,12 +84,21 @@ router.get('/LayDanhSachPhimPhanTrang', async (req, res) => {
             jsonRespone.totalCount = list.length
             var newArray = new Array()
             list.slice(start, end).forEach(e => {
+                var link0;
+                const goc = e.hinhAnh
+                console.log(goc)
+                if (goc.substring(0,8) == "https://" || goc.substring(0,7) == "http://") {
+                    link0 = goc
+                }
+                else {
+                    link0 = process.env.HTTPSERVER + process.env.PORT + "/" + goc.substring(7, goc.length)
+                }
                 newArray.push({
                     maPhim: e._id,
                     tenPhim: e.tenPhim,
                     biDanh: e.biDanh,
                     trailer: e.trailer,
-                    hinhAnh: e.hinhAnh,
+                    hinhAnh: link0,
                     moTa: e.moTa,
                     ngayKhoiChieu: e.ngayKhoiChieu,
                     danhGia: e.danhGia
@@ -101,12 +123,20 @@ router.get('/LayDanhSachPhimPhanTrang', async (req, res) => {
             jsonRespone.totalCount = list.length
             var newArray = new Array()
             list.slice(start, end).forEach(e => {
+                var link0;
+                const goc = e.hinhAnh
+                if (goc.substring(0,8) == "https://" || goc.substring(0,7) == "http://") {
+                    link0 = goc
+                }
+                else {
+                    link0 = process.env.HTTPSERVER + process.env.PORT + "/" + goc.substring(7, goc.length)
+                }
                 newArray.push({
                     maPhim: e._id,
                     tenPhim: e.tenPhim,
                     biDanh: e.biDanh,
                     trailer: e.trailer,
-                    hinhAnh: e.hinhAnh,
+                    hinhAnh: link0,
                     moTa: e.moTa,
                     ngayKhoiChieu: e.ngayKhoiChieu,
                     danhGia: e.danhGia
@@ -148,10 +178,10 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
                         })
                 }
                 start0 = new Date(
-                    parseInt(req.query.tuNgay.substring(6, 10),0),
-                    parseInt(req.query.tuNgay.substring(3, 5),0),
-                    parseInt(req.query.tuNgay.substring(0, 2),0)
-                ) 
+                    parseInt(req.query.tuNgay.substring(6, 10), 0),
+                    parseInt(req.query.tuNgay.substring(3, 5), 0),
+                    parseInt(req.query.tuNgay.substring(0, 2), 0)
+                )
             }
             else {
                 start0 = new Date()
@@ -167,9 +197,9 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
                         })
                 }
                 end0 = new Date(
-                    parseInt(req.query.denNgay.substring(6, 10),0),
-                    parseInt(req.query.denNgay.substring(3, 5),0),
-                    parseInt(req.query.denNgay.substring(0, 2),0)
+                    parseInt(req.query.denNgay.substring(6, 10), 0),
+                    parseInt(req.query.denNgay.substring(3, 5), 0),
+                    parseInt(req.query.denNgay.substring(0, 2), 0)
                 )
 
                 list = await Movie.find({
@@ -208,12 +238,20 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
             jsonRespone.totalCount = list.length
             var newArray = new Array()
             list.slice(start, end).forEach(e => {
+                var link0;
+                const goc = e.hinhAnh
+                if (goc.substring(0,8) == "https://" || goc.substring(0,7) == "http://") {
+                    link0 = goc
+                }
+                else {
+                    link0 = process.env.HTTPSERVER + process.env.PORT + "/" + goc.substring(7, goc.length)
+                }
                 newArray.push({
                     maPhim: e._id,
                     tenPhim: e.tenPhim,
                     biDanh: e.biDanh,
                     trailer: e.trailer,
-                    hinhAnh: e.hinhAnh,
+                    hinhAnh: link0,
                     moTa: e.moTa,
                     ngayKhoiChieu: e.ngayKhoiChieu,
                     danhGia: e.danhGia
@@ -240,10 +278,10 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
                         })
                 }
                 start0 = new Date(
-                    parseInt(req.query.tuNgay.substring(6, 10),0),
-                    parseInt(req.query.tuNgay.substring(3, 5),0),
-                    parseInt(req.query.tuNgay.substring(0, 2),0)
-                ) 
+                    parseInt(req.query.tuNgay.substring(6, 10), 0),
+                    parseInt(req.query.tuNgay.substring(3, 5), 0),
+                    parseInt(req.query.tuNgay.substring(0, 2), 0)
+                )
             }
             else {
                 start0 = new Date()
@@ -259,9 +297,9 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
                         })
                 }
                 end0 = new Date(
-                    parseInt(req.query.denNgay.substring(6, 10),0),
-                    parseInt(req.query.denNgay.substring(3, 5),0),
-                    parseInt(req.query.denNgay.substring(0, 2),0)
+                    parseInt(req.query.denNgay.substring(6, 10), 0),
+                    parseInt(req.query.denNgay.substring(3, 5), 0),
+                    parseInt(req.query.denNgay.substring(0, 2), 0)
                 )
 
                 list = await Movie.find({
@@ -300,12 +338,20 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
             jsonRespone.totalCount = list.length
             var newArray = new Array()
             list.slice(start, end).forEach(e => {
+                var link0;
+                const goc = e.hinhAnh
+                if (goc.substring(0,8) == "https://" || goc.substring(0,7) == "http://") {
+                    link0 = goc
+                }
+                else {
+                    link0 = process.env.HTTPSERVER + process.env.PORT + "/" + goc.substring(7, goc.length)
+                }
                 newArray.push({
                     maPhim: e._id,
                     tenPhim: e.tenPhim,
                     biDanh: e.biDanh,
                     trailer: e.trailer,
-                    hinhAnh: e.hinhAnh,
+                    hinhAnh: link0,
                     moTa: e.moTa,
                     ngayKhoiChieu: e.ngayKhoiChieu,
                     danhGia: e.danhGia
@@ -325,7 +371,6 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
         res.status(500).json({ success: false, message: 'Intenal server error' })
     }
 })
-
 router.post('/ThemPhim', verifyTokenAdmin, async (req, res) => {
     const {
         tenPhim,
@@ -369,9 +414,9 @@ router.post('/ThemPhim', verifyTokenAdmin, async (req, res) => {
                 })
         }
         var ngayMMddYYYY = new Date(
-            parseInt(ngayKhoiChieu.substring(6, 10),0),
-            parseInt(ngayKhoiChieu.substring(3, 5),0),
-            parseInt(ngayKhoiChieu.substring(0, 2),0)
+            parseInt(ngayKhoiChieu.substring(6, 10), 0),
+            parseInt(ngayKhoiChieu.substring(3, 5), 0),
+            parseInt(ngayKhoiChieu.substring(0, 2), 0)
         )
 
         const regexHinhAnh = /[^"']+\.(?:(?:pn|jpe?)g|gif)\b/;
@@ -419,275 +464,6 @@ router.post('/ThemPhim', verifyTokenAdmin, async (req, res) => {
         res.status(500).json({ success: false, message: 'Intenal server error' })
     }
 })
-
-///--------------------------------------------------
-const multer = require("multer");
-const path = require('path');
-//http://localhost:5000/uploads/images/1.png
-router.post('/ThemPhimUploadHinh', async (req, res) => {
-    const {
-        tenPhim,
-        biDanh,
-        trailer,
-        moTa,
-        ngayKhoiChieu,
-        danhGia
-    } = req.body
-    const {
-        hinhAnh
-    } = req.file
-    try {
-
-        // Simple validation
-        if (!tenPhim) {
-            return res
-                .status(400
-                    .json({
-                        success: false,
-                        message: 'Missing tenPhim'
-                    })
-                )
-        }
-        // check for existing user
-        const movie = await Movie.findOne({ tenPhim, daXoa: false })
-        if (movie) {
-            return res
-                .status(400)
-                .json({
-                    success: false,
-                    message: 'tenPhim already taken'
-                })
-        }
-
-        const regex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/
-        if (ngayKhoiChieu.match(regex) === null) {
-            return res
-                .status(200)
-                .json({
-                    message: "Xử lý thất bại",
-                    content: "Ngày không hợp lệ, Ngày có định dạng dd/MM/yyyy !"
-                })
-        }
-        var ngayMMddYYYY = new Date(
-            parseInt(ngayKhoiChieu.substring(6, 10),0),
-            parseInt(ngayKhoiChieu.substring(3, 5),0),
-            parseInt(ngayKhoiChieu.substring(0, 2),0)
-        )
-        // up hinh https://stackabuse.com/handling-file-uploads-in-node-js-with-expres-and-multer/
-        const storage = multer.diskStorage({
-            destination: function (req, file, cb) {
-                cb(null, 'uploads/images/');
-            },
-            // By default, multer removes file extensions so let's add them back
-            filename: function (req, file, cb) {
-                cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-            }
-        });
-        const imageFilter = function (req, file, cb) {
-            // Accept images only
-            if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-                req.fileValidationError = 'Only image files are allowed!';
-                return cb(new Error('Only image files are allowed!'), false);
-            }
-            cb(null, true);
-        };
-        let upload = multer({ storage: storage, fileFilter: imageFilter }).single('hinhanh');
-        upload(req, res, async function (err) {
-            // req.file contains information of uploaded file
-            // req.body contains information of text fields, if there were any
-            if (req.fileValidationError) {
-                return res.send(req.fileValidationError);
-            }
-            else if (!req.file) {
-                return res.json({ content: 'Please select an image to upload' });
-            }
-            else if (err instanceof multer.MulterError) {
-                return res.send(err);
-            }
-            else if (err) {
-                return res.send(err);
-            }
-
-            // Display uploaded image for user validation
-            //res.send(`You have uploaded this image: <hr/><img src="${req.file.path}" width="500"><hr /><a href="./">Upload another image</a>`);
-            const newMovie = new Movie({
-                tenPhim,
-                biDanh,
-                trailer,
-                hinhAnh: req.file.path,
-                moTa,
-                ngayKhoiChieu: ngayMMddYYYY,
-                danhGia,
-                daXoa,
-                thoiLuong
-            })
-            await newMovie.save()
-
-            var result = new Object
-            result.maPhim = newMovie._id
-            result.tenPhim = newMovie.tenPhim
-            result.biDanh = newMovie.biDanh
-            result.trailer = newMovie.trailer
-            result.hinhAnh = newMovie.hinhAnh
-            result.moTa = newMovie.moTa
-            result.ngayKhoiChieu = newMovie.ngayKhoiChieu
-            result.danhGia = newMovie.danhGia
-            result.daXoa = newMovie.daXoa
-
-            return res
-                .status(200)
-                .json({
-                    message: "Xử lý thành công",
-                    content: result
-                })
-        });
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ success: false, message: 'Intenal server error' })
-    }
-})
-
-router.post('/CapNhatPhimUpload', verifyTokenAdmin, async (req, res) => {
-    const {
-        maPhim,
-        tenPhim,
-        biDanh,
-        trailer,
-        moTa,
-        ngayKhoiChieu,
-        danhGia
-    } = req.body
-    const {
-        hinhAnh
-    } = req.file
-    try {
-
-        // Simple validation
-        if (!tenPhim) {
-            return res
-                .status(400
-                    .json({
-                        success: false,
-                        message: 'Missing tenPhim'
-                    })
-                )
-        }
-
-        const regex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/
-        if (ngayKhoiChieu.match(regex) === null) {
-            return res
-                .status(200)
-                .json({
-                    message: "Xử lý thất bại",
-                    content: "Ngày không hợp lệ, Ngày có định dạng dd/MM/yyyy !"
-                })
-        }
-        var ngayMMddYYYY = new Date(
-            parseInt(ngayKhoiChieu.substring(6, 10),0),
-            parseInt(ngayKhoiChieu.substring(3, 5),0),
-            parseInt(ngayKhoiChieu.substring(0, 2),0)
-        )
-        // up hinh https://stackabuse.com/handling-file-uploads-in-node-js-with-expres-and-multer/
-        const storage = multer.diskStorage({
-            destination: function (req, file, cb) {
-                cb(null, 'uploads/images/');
-            },
-            // By default, multer removes file extensions so let's add them back
-            filename: function (req, file, cb) {
-                cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-            }
-        });
-        const imageFilter = function (req, file, cb) {
-            // Accept images only
-            if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-                req.fileValidationError = 'Only image files are allowed!';
-                return cb(new Error('Only image files are allowed!'), false);
-            }
-            cb(null, true);
-        };
-        let upload = multer({ storage: storage, fileFilter: imageFilter }).single('hinhanh');
-        upload(req, res, async function (err) {
-            // req.file contains information of uploaded file
-            // req.body contains information of text fields, if there were any
-            if (req.fileValidationError) {
-                return res.send(req.fileValidationError);
-            }
-            else if (!req.file) {
-                return res.json({ content: 'Please select an image to upload' });
-            }
-            else if (err instanceof multer.MulterError) {
-                return res.send(err);
-            }
-            else if (err) {
-                return res.send(err);
-            }
-
-            // Display uploaded image for user validation
-            //res.send(`You have uploaded this image: <hr/><img src="${req.file.path}" width="500"><hr /><a href="./">Upload another image</a>`);
-            const newMovie = new Movie({
-                tenPhim,
-                biDanh,
-                trailer,
-                hinhAnh: req.file.path,
-                moTa,
-                ngayKhoiChieu: ngayMMddYYYY,
-                danhGia,
-                daXoa,
-                thoiLuong
-            })
-            const movieUpdated = await Movie.findOneAndUpdate(
-                { _id: maPhim },
-                newMovie
-                , { new: true }
-            )
-            if (!movieUpdated) {
-                return res
-                    .status(401)
-                    .json({
-                        success: false,
-                        content: 'Movie updated error'
-                    })
-            }
-            else {
-                var result = new Object
-                result.maPhim = newMovie._id
-                result.tenPhim = newMovie.tenPhim
-                result.biDanh = newMovie.biDanh
-                result.trailer = newMovie.trailer
-                result.hinhAnh = newMovie.hinhAnh
-                result.moTa = newMovie.moTa
-                result.ngayKhoiChieu = newMovie.ngayKhoiChieu
-                result.danhGia = newMovie.danhGia
-                result.daXoa = newMovie.daXoa
-
-                return res
-                    .status(200)
-                    .json({
-                        message: "Xử lý thành công",
-                        content: result
-                    })
-            }
-        });
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ success: false, message: 'Intenal server error' })
-    }
-})
-
-
-
-
-
-
-// 5 api giua ?
-
-
-
-
-
-
-
-
 
 
 router.post('/CapNhatPhim', verifyTokenAdmin, async (req, res) => {
@@ -733,9 +509,9 @@ router.post('/CapNhatPhim', verifyTokenAdmin, async (req, res) => {
                 })
         }
         var ngayMMddYYYY = new Date(
-            parseInt(ngayKhoiChieu.substring(6, 10),0),
-            parseInt(ngayKhoiChieu.substring(3, 5),0),
-            parseInt(ngayKhoiChieu.substring(0, 2),0)
+            parseInt(ngayKhoiChieu.substring(6, 10), 0),
+            parseInt(ngayKhoiChieu.substring(3, 5), 0),
+            parseInt(ngayKhoiChieu.substring(0, 2), 0)
         )
 
         const regexHinhAnh = /[^"']+\.(?:(?:pn|jpe?)g|gif)\b/;
@@ -747,16 +523,6 @@ router.post('/CapNhatPhim', verifyTokenAdmin, async (req, res) => {
                     content: "Link hình ảnh không hợp lệ, định dạng là png,jpg,jpeg,gif !"
                 })
         }
-        /*
-        var filepath = '../public/image/'
-        var filepathFull = filepath + hinhAnh.name
-        var file_temp = hinhAnh.tmp_name
-        const data = new Uint8Array(buffer.from(file_temp));
-        fs.writeFile(filepathFull, data,(err) => {
-            if (err) throw err
-            console.log('The file has been saved!')
-        })
-        */
 
         const newMovie = new Movie({
             tenPhim,
@@ -794,7 +560,7 @@ router.post('/CapNhatPhim', verifyTokenAdmin, async (req, res) => {
     }
 })
 
-router.delete('/XoaPhim', verifyTokenAdmin, async (req, res) => {
+router.delete('/XoaPhim', /*verifyTokenAdmin,*/ async (req, res) => {
     try {
         const moviedeleted = await Movie.findOneAndUpdate({ _id: req.query.MaPhim, daXoa: false }, { daXoa: true }, { new: true })
         // xoa thuc su
@@ -877,7 +643,15 @@ router.get('/LayThongTinPhim', async (req, res) => {
                 responseResult.tenPhim = movieFind.tenPhim
                 responseResult.biDanh = movieFind.biDanh
                 responseResult.trailer = movieFind.biDanh
-                responseResult.hinhAnh = movieFind.hinhAnh
+                var link0;
+                const goc = movieFind.hinhAnh
+                if (goc.startWiths('http://') || goc.startWiths('https://')) {
+                    link0 = goc
+                }
+                else {
+                    link0 = "http://localhost:" + process.env.PORT + "/" + goc.substring(7, substring.length)
+                }
+                responseResult.hinhAnh = link0
                 responseResult.moTa = movieFind.moTa
                 responseResult.ngayKhoiChieu = movieFind.ngayKhoiChieu
                 responseResult.danhGia = movieFind.danhGia
@@ -897,5 +671,253 @@ router.get('/LayThongTinPhim', async (req, res) => {
         res.status(500).json({ success: false, message: 'Intenal server error' })
     }
 })
+
+
+///--------------------------------------------------
+const multer = require("multer");
+const path = require('path');
+const bodyParser = require('body-parser')
+const e = require('express')
+// for parsing application/json
+// app.use(bodyParser.json()); 
+// for parsing application/xwww-
+// app.use(bodyParser.urlencoded({ extended: true }));
+// var urlencodedParser = bodyParser.urlencoded({ extended: false })
+// for parsing multipart/form-data
+// app.use(up.array()); 
+// const formdataParser = up0.array();
+// http://localhost:5000/uploads/images/1.png
+//cấu hình lưu trữ file khi upload xong
+router.use(bodyParser.urlencoded({ extended: true }))
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/uploads/images/');
+    },
+    // By default, multer removes file extensions so let's add them back
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+const imageFilter = function (req, file, cb) {
+    // Accept images only
+    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+        req.fileValidationError = 'Only image files are allowed!';
+        return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+};
+router.post('/ThemPhimUploadHinh', async (req, res) => {
+    let upload = multer({ storage: storage, fileFilter: imageFilter }).single('hinhAnh');
+    upload(req, res, async function (err) {
+        // req.file contains information of uploaded file
+        // req.body contains information of text fields, if there were any
+        if (req.fileValidationError) {
+            return res.send(req.fileValidationError);
+        }
+        else if (!req.file) {
+            return res.send('Please select an image to upload');
+        }
+        else if (err instanceof multer.MulterError) {
+            return res.send(err);
+        }
+        else if (err) {
+            return res.send(err);
+        }
+
+        // Display uploaded image for user validation
+        // res.send(`You have uploaded this image: <hr/><img src="${req.file.path.substring(7,req.file.path.length)}" width="500"><hr /><a href="./">Upload another image</a><h1>${ req.body.text }</h1>`);
+
+        const {
+            tenPhim,
+            trailer,
+            moTa,
+            ngayKhoiChieu,
+            danhGia,
+            dangChieu,
+            sapChieu,
+            hot
+        } = req.body
+
+        const biDanh0 = tenPhim.toString()
+            .toLowerCase().normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/đ/g, "d")
+            .replace(/Đ/g, "D")
+            .replace(/ /g, "")
+
+        var ngayMMddYYYY = new Date(
+            parseInt(ngayKhoiChieu.substring(6, 10), 0),
+            parseInt(ngayKhoiChieu.substring(3, 5), 0),
+            parseInt(ngayKhoiChieu.substring(0, 2), 0)
+        )
+
+        const {
+            path
+        } = req.file
+
+        var duongDan = path.replace("\\", "/").replace("\\", "/").replace("\\", "/")
+        try {
+            const newMovie = new Movie({
+                tenPhim,
+                biDanh: biDanh0,
+                trailer,
+                hinhAnh: duongDan,
+                moTa,
+                ngayKhoiChieu: ngayMMddYYYY,
+                danhGia,
+                daXoa: false,
+                thoiLuong: 120,
+                dangChieu,
+                sapChieu,
+                hot
+            })
+            await newMovie.save()
+
+            var result = new Object
+            result.maPhim = newMovie._id
+            result.tenPhim = newMovie.tenPhim
+            result.biDanh = newMovie.biDanh
+            result.trailer = newMovie.trailer
+            result.hinhAnh = newMovie.hinhAnh
+            result.moTa = newMovie.moTa
+            result.ngayKhoiChieu = newMovie.ngayKhoiChieu
+            result.danhGia = newMovie.danhGia
+            result.daXoa = newMovie.daXoa
+
+            return res
+                .status(200)
+                .json({
+                    message: "Xử lý thành công",
+                    content: result
+                })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ success: false, message: 'Intenal server error(lỗi lưu trùng dữ liệu)' })
+        }
+    });
+})
+
+// xóa file anh
+const fs = require('fs');
+router.post('/CapNhatPhimUpload', /*verifyTokenAdmin,*/ async (req, res) => {
+    let upload = multer({ storage: storage, fileFilter: imageFilter }).single('hinhAnh');
+    upload(req, res, async function (err) {
+        // req.file contains information of uploaded file
+        // req.body contains information of text fields, if there were any
+        if (req.fileValidationError) {
+            return res.send(req.fileValidationError);
+        }
+        else if (!req.file) {
+            return res.send('Please select an image to upload');
+        }
+        else if (err instanceof multer.MulterError) {
+            return res.send(err);
+        }
+        else if (err) {
+            return res.send(err);
+        }
+
+        // Display uploaded image for user validation
+        // res.send(`You have uploaded this image: <hr/><img src="${req.file.path.substring(7,req.file.path.length)}" width="500"><hr /><a href="./">Upload another image</a><h1>${ req.body.text }</h1>`);
+
+        const {
+            maPhim,
+            tenPhim,
+            trailer,
+            moTa,
+            ngayKhoiChieu,
+            danhGia,
+            dangChieu,
+            sapChieu,
+            hot
+        } = req.body
+
+        const biDanh0 = tenPhim.toString()
+            .toLowerCase().normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/đ/g, "d")
+            .replace(/Đ/g, "D")
+            .replace(/ /g, "")
+
+        var ngayMMddYYYY = new Date(
+            parseInt(ngayKhoiChieu.substring(6, 10), 0),
+            parseInt(ngayKhoiChieu.substring(3, 5), 0),
+            parseInt(ngayKhoiChieu.substring(0, 2), 0)
+        )
+
+        const existMovie = await Movie.findOne({ _id: maPhim })
+        if (existMovie) {
+            try {
+                fs.unlinkSync("./" + existMovie.hinhAnh)
+                //file removed
+            } catch (err) {
+                console.error(err)
+            }
+        }
+
+        const {
+            path
+        } = req.file
+
+        var duongDan = path.replace("\\", "/").replace("\\", "/").replace("\\", "/")
+
+        try {
+            const updated = await Movie.findOneAndUpdate(
+                { _id: maPhim },
+                {
+                    tenPhim,
+                    biDanh: biDanh0,
+                    trailer,
+                    hinhAnh: duongDan,
+                    moTa,
+                    ngayKhoiChieu: ngayMMddYYYY,
+                    danhGia,
+                    daXoa: false,
+                    thoiLuong: 120,
+                    dangChieu,
+                    sapChieu,
+                    hot
+                },
+                { new: true }
+            )
+
+            if (!updated) {
+                return res
+                    .status(401)
+                    .json({
+                        success: false,
+                        message: 'Cập nhật Phim thất bại'
+                    })
+            }
+            else {
+                var result = {
+                    maPhim,
+                    tenPhim,
+                    biDanh: biDanh0,
+                    trailer,
+                    hinhAnh: req.file.path,
+                    moTa,
+                    ngayKhoiChieu,
+                    danhGia,
+                    daXoa: false
+                }
+
+                return res
+                    .status(200)
+                    .json({
+                        message: "Xử lý thành công",
+                        content: result
+                    })
+            }
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ success: false, message: 'Intenal server error(lỗi lưu trùng dữ liệu)' })
+        }
+    });
+})
+//--------------------------------------------------------------
+
+
 
 module.exports = router

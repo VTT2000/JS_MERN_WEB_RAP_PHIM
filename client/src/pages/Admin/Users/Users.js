@@ -73,7 +73,7 @@ export default function Users() {
     },
     {
       title: "Hành động",
-      dataIndex: "maPhim",
+
       render: (text, user) => {
         return (
           <Fragment>
@@ -95,24 +95,11 @@ export default function Users() {
                     "Bạn có chắc muốn xoá tài khoản " + user.taiKhoan
                   )
                 ) {
-                  //Gọi action
-                  // dispatch(xoaPhimAction(film.maPhim));
                 }
               }}
             >
               <DeleteOutlined style={{ color: "red" }} />{" "}
             </span>
-
-            <NavLink
-              key={1}
-              className=" mr-2 text-2xl"
-              to={`/admin/films/showtime/${user.taiKhoan}/${user.tenPhim}`}
-              onClick={() => {
-                localStorage.setItem("filmParams", JSON.stringify(user));
-              }}
-            >
-              <CalendarOutlined style={{ color: "green" }} />{" "}
-            </NavLink>
           </Fragment>
         );
       },
@@ -124,7 +111,7 @@ export default function Users() {
 
   const onSearch = (value) => {
     console.log(value);
-    //Gọi api layDanhSachPhim
+
     dispatch(layThongTinNguoiDungAction(value));
   };
 
@@ -143,7 +130,7 @@ export default function Users() {
       >
         Thêm người dùng
       </Button>
-      {/* <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} /> */}
+
       <Search
         className="mb-5"
         placeholder="input search text"
@@ -156,7 +143,7 @@ export default function Users() {
         columns={columns}
         dataSource={data}
         onChange={onChange}
-        // rowKey={"taiKhoan"}
+        rowKey={"taiKhoan"}
       />
     </div>
   );

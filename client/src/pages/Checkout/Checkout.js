@@ -45,7 +45,7 @@ function Checkout(props) {
 
   console.log({ chiTietPhongVe });
   const { thongTinPhim, danhSachGhe } = chiTietPhongVe;
-
+  console.log("hihi", thongTinPhim);
   const renderSeats = () => {
     return danhSachGhe.map((ghe, index) => {
       let classGheVip = ghe.loaiGhe === "Vip" ? "gheVip" : "";
@@ -202,6 +202,7 @@ function Checkout(props) {
           </h3>
           <hr />
           <h3 className="text-xl mt-2">{thongTinPhim.tenPhim}</h3>
+
           <p>
             Địa điểm: {thongTinPhim.tenCumRap} - {thongTinPhim.tenRap}
           </p>
@@ -243,8 +244,7 @@ function Checkout(props) {
                 const thongTinDatVe = new ThongTinDatVe();
                 thongTinDatVe.maLichChieu = props.match.params.id;
                 thongTinDatVe.danhSachVe = danhSachGheDangDat;
-
-                console.log(thongTinDatVe);
+                thongTinDatVe.maRap = console.log(thongTinDatVe);
 
                 dispatch(datVeAction(thongTinDatVe));
               }}

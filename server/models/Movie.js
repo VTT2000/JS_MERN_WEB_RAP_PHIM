@@ -35,6 +35,15 @@ const MovieSchema = new Schema({
     thoiLuong:{
         type: Number,
         default: 120
+    },
+    dangChieu:{
+        type: Boolean
+    },
+    sapChieu:{
+        type: Boolean
+    },
+    hot:{
+        type: Boolean
     }
 })
 

@@ -1,22 +1,19 @@
 require('dotenv').config()
 const express = require('express')
+const cors = require('cors')
 const mongoose = require('mongoose')
-
 
 const multer = require('multer');
 const path = require('path');
+const upload = multer();
 
 
-// Cac route trang user
+// Cac route
 const qlNguoiDungRouter = require('./routes/quanLyNguoiDung')
 const qlPhimRouter = require('./routes/quanLyPhim')
 const qlRapRouter = require('./routes/quanLyRap')
 const qlDatVe = require('./routes/quanLyDatVe')
 const qlPost = require('./routes/post')
-
-// Cac route trang admin
-//const adminUserTypeRouter = require('./routesAdmin/usertype')
-//const adminUserRouter = require('./routesAdmin/user')
 
 const options = {
     autoIndex: false, // Don't build indexes
@@ -38,14 +35,17 @@ const connectDB = async () => {
 connectDB()
 
 const app = express()
-app.use(express.json())
+app.use(cors())
 
+app.use(express.json())
+/*
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();
 });
+*/
 
 app.use('/api/QuanLyNguoiDung', qlNguoiDungRouter)
 app.use('/api/QuanLyPhim', qlPhimRouter)
@@ -55,36 +55,7 @@ app.use('/api/posts', qlPost)
 
 app.use(express.static(__dirname + '/public'));
 
-
-//app.use(express.static('public')); 
-//app.use('/images', express.static('images'));
-
-/*
-app.use('/', function (req, res) {
-    fs.readFile('', function(err, data) {
-      res.writeHead(200, {'Content-Type': 'text/html'});
-      res.write(data);
-      return res.end();
-})
-*/
-/*
-app.get('/user/:uid/photos/:file', function(req, res){
-    var uid = req.params.uid
-      , file = req.params.file;
-  
-    req.user.mayViewFilesFrom(uid, function(yes){
-      if (yes) {
-        res.sendFile('/uploads/' + uid + '/' + file);
-      } else {
-        res.send(403, 'Sorry! you cant see that.');
-      }
-    });
-  });
-  */
-//app.use('/admin/usertypes', adminUserTypeRouter)
-//app.use('/admin/users', adminUserRouter)
-
-const PORT = 5000 || process.env.PORT
+const PORT = process.env.PORT || 5000 
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
 

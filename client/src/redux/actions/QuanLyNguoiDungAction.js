@@ -11,17 +11,15 @@ export const dangNhapAction = (thongTinDangNhap) => {
   return async (dispatch) => {
     try {
       const result = await quanLyNguoiDungService.dangNhap(thongTinDangNhap);
-      console.log("dd", result);
-      if (result.data.statusCode === 200) {
-        dispatch({
-          type: DANG_NHAP_ACTION,
-          thongTinDangNhap: result.data.content,
-        });
-        //Chuyển hướng đăng nhập về trang trước đó
-        history.goBack();
-      }
 
-      console.log("result", result);
+      dispatch({
+        type: DANG_NHAP_ACTION,
+        thongTinDangNhap: result.data.content,
+      });
+      //Chuyển hướng đăng nhập về trang trước đó
+      history.goBack();
+
+      history.push("/");
     } catch (error) {
       console.log("error", error.response.data);
     }
@@ -33,12 +31,10 @@ export const layThongTinNguoiDungAction = (thongTinDangNhap) => {
     try {
       const result = await quanLyNguoiDungService.layThongTinNguoiDung();
 
-      if (result.data.statusCode === 200) {
-        dispatch({
-          type: SET_THONG_TIN_NGUOI_DUNG,
-          thongTinNguoiDung: result.data.content,
-        });
-      }
+      dispatch({
+        type: SET_THONG_TIN_NGUOI_DUNG,
+        thongTinNguoiDung: result.data.content,
+      });
 
       console.log("result", result);
     } catch (error) {
@@ -51,12 +47,11 @@ export const dangKyAction = (thongTinDangKy) => {
     try {
       const result = await quanLyNguoiDungService.dangKy(thongTinDangKy);
 
-      if (result.data.statusCode === 200) {
-        alert("Đăng Ký thành công!!!");
-        history.push("/login");
-      }
+      alert("Đăng Ký thành công!!!");
+      history.push("/login");
     } catch (error) {
-      console.log("error", error.response.data);
+      alert(error.response.data.content);
+      console.log("error");
     }
   };
 };
@@ -66,12 +61,11 @@ export const layUsersAction = () => {
     try {
       const result = await quanLyNguoiDungService.layUsers();
       console.log("user", result);
-      if (result.data.statusCode === 200) {
-        dispatch({
-          type: GET_THONG_TIN_NGUOI_DUNG,
-          quanLyThongTin: result.data.content,
-        });
-      }
+
+      dispatch({
+        type: GET_THONG_TIN_NGUOI_DUNG,
+        quanLyThongTin: result.data.content,
+      });
     } catch (error) {
       console.log("error", error.response?.data);
     }

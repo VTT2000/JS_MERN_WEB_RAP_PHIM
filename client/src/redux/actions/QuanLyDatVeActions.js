@@ -15,12 +15,11 @@ export const layChiTietPhongVeAction = (maLichChieu) => {
       const result = await quanLyDatVeService.layChiTietPhongVe(maLichChieu);
 
       // console.log('result',result);
-      if (result.status === 200) {
-        dispatch({
-          type: SET_CHI_TIET_PHONG_VE,
-          chiTietPhongVe: result.data.content,
-        });
-      }
+
+      dispatch({
+        type: SET_CHI_TIET_PHONG_VE,
+        chiTietPhongVe: result.data.content,
+      });
     } catch (error) {
       console.log("error", error);
       console.log("error", error.response?.data);

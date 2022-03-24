@@ -209,11 +209,11 @@ POST http://localhost:5000/api/QuanLyNguoiDung/DangKy
 Content-Type: application/json
 
 {
-    "taiKhoan": "12312312311ggg",
-    "hoTen": "bbbbbbbb",
-    "email": "kksssk@gmail.com",
-    "soDt": "00094949494",
-    "matKhau": "sssssssssssa1",
+    "taiKhoan": "123456",
+    "hoTen": "123456",
+    "email": "123456@gmail.com",
+    "soDt": "123456",
+    "matKhau": "123456",
     "maLoaiNguoiDung": "621e157542c18eb1e10d3272"
     //"621e157e42c18eb1e10d3274" // mã người dùng quản trị
     //"621e157542c18eb1e10d3272" // mã người dùng khách hàng

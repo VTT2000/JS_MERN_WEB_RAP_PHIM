@@ -98,6 +98,7 @@ const AddNew = () => {
   return (
     <>
       <Form
+        className="w-full h-full"
         onSubmitCapture={formik.handleSubmit}
         labelCol={{
           span: 4,
@@ -121,13 +122,13 @@ const AddNew = () => {
           </Radio.Group>
         </Form.Item>
         <Form.Item label="Tên phim">
-          <Input name="tenPhim" name="tenPhim" onChange={formik.handleChange} />
+          <Input name="tenPhim" onChange={formik.handleChange} />
         </Form.Item>
         <Form.Item label="Trailer">
-          <Input name="trailer" name="trailer" onChange={formik.handleChange} />
+          <Input name="trailer" onChange={formik.handleChange} />
         </Form.Item>
         <Form.Item label="Mô tả">
-          <Input name="moTa" name="moTa" onChange={formik.handleChange} />
+          <Input name="moTa" onChange={formik.handleChange} />
         </Form.Item>
         <Form.Item label="Ngày khởi chiếu">
           <DatePicker format={"DD/MM/YYYY"} onChange={handleChangeDatePicker} />

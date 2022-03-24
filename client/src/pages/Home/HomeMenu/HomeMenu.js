@@ -17,6 +17,7 @@ export default class Demo extends React.PureComponent {
 
   renderHeThongRap = () => {
     return this.props.heThongRapChieu?.map((heThongRap, index) => {
+      console.log("aqe", this.props.heThongRapChieu);
       let { tabPosition } = this.state;
       return (
         <TabPane
