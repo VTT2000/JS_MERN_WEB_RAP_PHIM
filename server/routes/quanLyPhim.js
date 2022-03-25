@@ -14,28 +14,30 @@ const UserType = require('../models/UserType')
 
 //-------------------------------------------------
 router.get('/LayDanhSachPhim', async (req, res) => {
+    console.log("LayDanhSachPhim")
     try {
         const movies = await Movie.find({ daXoa: false })
-        var movies0 = movies.map(function(model) { return model.toObject(); });
+        var movies0 = movies.map(function (model) { return model.toObject(); });
         var listJsonRespone = new Array()
         //var link = "http://localhost:5000/"+goc
         for (let x = 0; x < movies0.length; x++) {
             const e = movies0[x];
+            /*
             var goc = e.hinhAnh
             //console.log(e.hinhAnh)
-            if (goc.substring(0,8) == "https://" || goc.substring(0,7) == "http://") {
+            if (goc.substring(0, 8) == "https://" || goc.substring(0, 7) == "http://") {
                 link0 = goc
             }
             else {
                 link0 = process.env.HTTPSERVER + process.env.PORT + "/" + goc.substring(7, goc.length)
-            }
+            }*/
             listJsonRespone.push(
                 {
                     maPhim: e._id,
                     tenPhim: e.tenPhim,
                     biDanh: e.biDanh,
                     trailer: e.trailer,
-                    hinhAnh: link0,
+                    hinhAnh: e.hinhAnh,
                     moTa: e.moTa,
                     ngayKhoiChieu: e.ngayKhoiChieu,
                     danhGia: e.danhGia
@@ -56,6 +58,7 @@ router.get('/LayDanhSachPhim', async (req, res) => {
 })
 
 router.get('/LayDanhSachPhimPhanTrang', async (req, res) => {
+    console.log("LayDanhSachPhimPhanTrang")
     try {
         if (req.query.soPhanTuTrenTrang == null) {
             req.query.soPhanTuTrenTrang = 2
@@ -84,21 +87,12 @@ router.get('/LayDanhSachPhimPhanTrang', async (req, res) => {
             jsonRespone.totalCount = list.length
             var newArray = new Array()
             list.slice(start, end).forEach(e => {
-                var link0;
-                const goc = e.hinhAnh
-                console.log(goc)
-                if (goc.substring(0,8) == "https://" || goc.substring(0,7) == "http://") {
-                    link0 = goc
-                }
-                else {
-                    link0 = process.env.HTTPSERVER + process.env.PORT + "/" + goc.substring(7, goc.length)
-                }
                 newArray.push({
                     maPhim: e._id,
                     tenPhim: e.tenPhim,
                     biDanh: e.biDanh,
                     trailer: e.trailer,
-                    hinhAnh: link0,
+                    hinhAnh: e.hinhAnh,
                     moTa: e.moTa,
                     ngayKhoiChieu: e.ngayKhoiChieu,
                     danhGia: e.danhGia
@@ -123,20 +117,12 @@ router.get('/LayDanhSachPhimPhanTrang', async (req, res) => {
             jsonRespone.totalCount = list.length
             var newArray = new Array()
             list.slice(start, end).forEach(e => {
-                var link0;
-                const goc = e.hinhAnh
-                if (goc.substring(0,8) == "https://" || goc.substring(0,7) == "http://") {
-                    link0 = goc
-                }
-                else {
-                    link0 = process.env.HTTPSERVER + process.env.PORT + "/" + goc.substring(7, goc.length)
-                }
                 newArray.push({
                     maPhim: e._id,
                     tenPhim: e.tenPhim,
                     biDanh: e.biDanh,
                     trailer: e.trailer,
-                    hinhAnh: link0,
+                    hinhAnh: e.hinhAnh,
                     moTa: e.moTa,
                     ngayKhoiChieu: e.ngayKhoiChieu,
                     danhGia: e.danhGia
@@ -158,6 +144,7 @@ router.get('/LayDanhSachPhimPhanTrang', async (req, res) => {
 })
 
 router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
+    console.log("LayDanhSachPhimTheoNgay")
     try {
         if (req.query.soPhanTuTrenTrang == null) {
             req.query.soPhanTuTrenTrang = 2
@@ -238,20 +225,12 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
             jsonRespone.totalCount = list.length
             var newArray = new Array()
             list.slice(start, end).forEach(e => {
-                var link0;
-                const goc = e.hinhAnh
-                if (goc.substring(0,8) == "https://" || goc.substring(0,7) == "http://") {
-                    link0 = goc
-                }
-                else {
-                    link0 = process.env.HTTPSERVER + process.env.PORT + "/" + goc.substring(7, goc.length)
-                }
                 newArray.push({
                     maPhim: e._id,
                     tenPhim: e.tenPhim,
                     biDanh: e.biDanh,
                     trailer: e.trailer,
-                    hinhAnh: link0,
+                    hinhAnh: e.hinhAnh,
                     moTa: e.moTa,
                     ngayKhoiChieu: e.ngayKhoiChieu,
                     danhGia: e.danhGia
@@ -338,20 +317,12 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
             jsonRespone.totalCount = list.length
             var newArray = new Array()
             list.slice(start, end).forEach(e => {
-                var link0;
-                const goc = e.hinhAnh
-                if (goc.substring(0,8) == "https://" || goc.substring(0,7) == "http://") {
-                    link0 = goc
-                }
-                else {
-                    link0 = process.env.HTTPSERVER + process.env.PORT + "/" + goc.substring(7, goc.length)
-                }
                 newArray.push({
                     maPhim: e._id,
                     tenPhim: e.tenPhim,
                     biDanh: e.biDanh,
                     trailer: e.trailer,
-                    hinhAnh: link0,
+                    hinhAnh: e.hinhAnh,
                     moTa: e.moTa,
                     ngayKhoiChieu: e.ngayKhoiChieu,
                     danhGia: e.danhGia
@@ -372,6 +343,7 @@ router.get('/LayDanhSachPhimTheoNgay', async (req, res) => {
     }
 })
 router.post('/ThemPhim', verifyTokenAdmin, async (req, res) => {
+    console.log("ThemPhim")
     const {
         tenPhim,
         biDanh,
@@ -386,12 +358,11 @@ router.post('/ThemPhim', verifyTokenAdmin, async (req, res) => {
         // Simple validation
         if (!tenPhim) {
             return res
-                .status(400
+                .status(400)
                     .json({
                         success: false,
                         message: 'Missing tenPhim'
                     })
-                )
         }
         // check for existing user
         const movie = await Movie.findOne({ tenPhim, daXoa: false })
@@ -467,6 +438,7 @@ router.post('/ThemPhim', verifyTokenAdmin, async (req, res) => {
 
 
 router.post('/CapNhatPhim', verifyTokenAdmin, async (req, res) => {
+    console.log("CapNhatPhim")
     const {
         tenPhim,
         biDanh,
@@ -560,7 +532,8 @@ router.post('/CapNhatPhim', verifyTokenAdmin, async (req, res) => {
     }
 })
 
-router.delete('/XoaPhim', /*verifyTokenAdmin,*/ async (req, res) => {
+router.delete('/XoaPhim', verifyTokenAdmin, async (req, res) => {
+    console.log("XoaPhim")
     try {
         const moviedeleted = await Movie.findOneAndUpdate({ _id: req.query.MaPhim, daXoa: false }, { daXoa: true }, { new: true })
         // xoa thuc su
@@ -588,6 +561,7 @@ router.delete('/XoaPhim', /*verifyTokenAdmin,*/ async (req, res) => {
 })
 
 router.get('/LayThongTinPhim', async (req, res) => {
+    console.log("LayThongTinPhim")
     try {
         if (!req.query.MaPhim) {
             return res
@@ -643,15 +617,7 @@ router.get('/LayThongTinPhim', async (req, res) => {
                 responseResult.tenPhim = movieFind.tenPhim
                 responseResult.biDanh = movieFind.biDanh
                 responseResult.trailer = movieFind.biDanh
-                var link0;
-                const goc = movieFind.hinhAnh
-                if (goc.startWiths('http://') || goc.startWiths('https://')) {
-                    link0 = goc
-                }
-                else {
-                    link0 = "http://localhost:" + process.env.PORT + "/" + goc.substring(7, substring.length)
-                }
-                responseResult.hinhAnh = link0
+                responseResult.hinhAnh = movieFind.hinhAnh
                 responseResult.moTa = movieFind.moTa
                 responseResult.ngayKhoiChieu = movieFind.ngayKhoiChieu
                 responseResult.danhGia = movieFind.danhGia
@@ -674,21 +640,172 @@ router.get('/LayThongTinPhim', async (req, res) => {
 
 
 ///--------------------------------------------------
-const multer = require("multer");
-const path = require('path');
-const bodyParser = require('body-parser')
-const e = require('express')
-// for parsing application/json
-// app.use(bodyParser.json()); 
-// for parsing application/xwww-
-// app.use(bodyParser.urlencoded({ extended: true }));
-// var urlencodedParser = bodyParser.urlencoded({ extended: false })
-// for parsing multipart/form-data
-// app.use(up.array()); 
-// const formdataParser = up0.array();
-// http://localhost:5000/uploads/images/1.png
-//cấu hình lưu trữ file khi upload xong
-router.use(bodyParser.urlencoded({ extended: true }))
+var fileupload = require("express-fileupload");
+router.use(fileupload());
+router.use(express.urlencoded({ extended: true }));
+router.post('/ThemPhimUploadHinh', async (req, res) => {
+    const {
+        tenPhim,
+        trailer,
+        moTa,
+        ngayKhoiChieu,
+        danhGia,
+        dangChieu,
+        sapChieu,
+        hot
+    } = req.body
+
+    console.log("ThemPhimUploadHinh")
+
+    const biDanh0 = tenPhim.toString()
+        .toLowerCase().normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .replace(/ /g, "")
+
+    var ngayMMddYYYY = new Date(
+        parseInt(ngayKhoiChieu.substring(6, 10), 0),
+        parseInt(ngayKhoiChieu.substring(3, 5), 0),
+        parseInt(ngayKhoiChieu.substring(0, 2), 0)
+    )
+
+    const file = req.files.File
+    var data = file.data.toString('base64')
+    var hinh = "data:" + req.files.File.mimetype + ";base64," + data
+
+    try {
+        const newMovie = new Movie({
+            tenPhim,
+            biDanh: biDanh0,
+            trailer,
+            hinhAnh: hinh,
+            moTa,
+            ngayKhoiChieu: ngayMMddYYYY,
+            danhGia,
+            daXoa: false,
+            thoiLuong: 120,
+            dangChieu,
+            sapChieu,
+            hot
+        })
+        await newMovie.save()
+
+        var result = new Object
+        result.maPhim = newMovie._id
+        result.tenPhim = newMovie.tenPhim
+        result.biDanh = newMovie.biDanh
+        result.trailer = newMovie.trailer
+        result.hinhAnh = newMovie.hinhAnh
+        result.moTa = newMovie.moTa
+        result.ngayKhoiChieu = newMovie.ngayKhoiChieu
+        result.danhGia = newMovie.danhGia
+        result.daXoa = newMovie.daXoa
+
+        return res
+            .status(200)
+            .json({
+                message: "Xử lý thành công",
+                content: result
+            })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ success: false, message: 'Intenal server error(lỗi lưu trùng dữ liệu)' })
+    }
+})
+
+router.post('/CapNhatPhimUpload', verifyTokenAdmin, async (req, res) => {
+    const {
+        maPhim,
+        tenPhim,
+        trailer,
+        moTa,
+        ngayKhoiChieu,
+        danhGia,
+        dangChieu,
+        sapChieu,
+        hot
+    } = req.body
+
+    console.log("CapNhatPhimUpload")
+
+    const biDanh0 = tenPhim.toString()
+        .toLowerCase().normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .replace(/ /g, "")
+
+    var ngayMMddYYYY = new Date(
+        parseInt(ngayKhoiChieu.substring(6, 10), 0),
+        parseInt(ngayKhoiChieu.substring(3, 5), 0),
+        parseInt(ngayKhoiChieu.substring(0, 2), 0)
+    )
+
+    const file = req.files.File
+    var data = file.data.toString('base64')
+    var hinh = "data:" + req.files.File.mimetype + ";base64," + data
+
+    try {
+        const updated = await Movie.findOneAndUpdate(
+            { _id: maPhim },
+            {
+                tenPhim,
+                biDanh: biDanh0,
+                trailer,
+                hinhAnh: hinh,
+                moTa,
+                ngayKhoiChieu: ngayMMddYYYY,
+                danhGia,
+                daXoa: false,
+                thoiLuong: 120,
+                dangChieu,
+                sapChieu,
+                hot
+            },
+            { new: true }
+        )
+
+        if (!updated) {
+            return res
+                .status(401)
+                .json({
+                    success: false,
+                    message: 'Cập nhật Phim thất bại'
+                })
+        }
+        else {
+            var result = {
+                maPhim,
+                tenPhim,
+                biDanh: biDanh0,
+                trailer,
+                hinhAnh: hinh,
+                moTa,
+                ngayKhoiChieu,
+                danhGia,
+                daXoa: false
+            }
+
+            return res
+                .status(200)
+                .json({
+                    message: "Xử lý thành công",
+                    content: result
+                })
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ success: false, message: 'Intenal server error(lỗi lưu trùng dữ liệu)' })
+    }
+})
+
+
+module.exports = router
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+/*
+code bug lỗi sự cố
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'public/uploads/images/');
@@ -706,8 +823,49 @@ const imageFilter = function (req, file, cb) {
     }
     cb(null, true);
 };
-router.post('/ThemPhimUploadHinh', async (req, res) => {
-    let upload = multer({ storage: storage, fileFilter: imageFilter }).single('hinhAnh');
+
+const multer = require("multer");
+const path = require('path');
+// const bodyParser = require('body-parser')
+// const e = require('express')
+// for parsing application/json
+// app.use(bodyParser.json());
+// for parsing application/xwww-
+// app.use(bodyParser.urlencoded({ extended: true }));
+// var urlencodedParser = bodyParser.urlencoded({ extended: false })
+// for parsing multipart/form-data
+// var upload = multer();
+// app.use(upload.array());
+// const formdataParser = up0.array();
+// http://localhost:5000/uploads/images/1.png
+//cấu hình lưu trữ file khi upload xong
+//router.use(bodyParser.urlencoded({ extended: true }))
+
+router.post('/ThemPhimUploadHinh2', async (req, res) => {
+    const {
+        tenPhim,
+        trailer,
+        moTa,
+        ngayKhoiChieu,
+        danhGia,
+        dangChieu,
+        sapChieu,
+        hot
+    } = req.body
+
+    const file = req.files.File
+
+    if (!tenPhim) {
+        return res
+            .status(400
+                .json({
+                    success: false,
+                    message: 'Missing tenPhim'
+                })
+            )
+    }
+
+    let upload = multer({ storage: storage, fileFilter: imageFilter }).single('File');
     upload(req, res, async function (err) {
         // req.file contains information of uploaded file
         // req.body contains information of text fields, if there were any
@@ -796,128 +954,34 @@ router.post('/ThemPhimUploadHinh', async (req, res) => {
         }
     });
 })
+//var upload = multer();
+//router.use(upload.array());
+// router.use(express.urlencoded({ extended: false }));
 
-// xóa file anh
-const fs = require('fs');
-router.post('/CapNhatPhimUpload', /*verifyTokenAdmin,*/ async (req, res) => {
-    let upload = multer({ storage: storage, fileFilter: imageFilter }).single('hinhAnh');
-    upload(req, res, async function (err) {
-        // req.file contains information of uploaded file
-        // req.body contains information of text fields, if there were any
-        if (req.fileValidationError) {
-            return res.send(req.fileValidationError);
-        }
-        else if (!req.file) {
-            return res.send('Please select an image to upload');
-        }
-        else if (err instanceof multer.MulterError) {
-            return res.send(err);
-        }
-        else if (err) {
-            return res.send(err);
-        }
+router.post('/ThemPhimUploadHinh00', async (req, res) => {
+    const {
+        tenPhim,
+        trailer,
+        moTa,
+        ngayKhoiChieu,
+        danhGia,
+        dangChieu,
+        sapChieu,
+        hot
+    } = req.body
 
-        // Display uploaded image for user validation
-        // res.send(`You have uploaded this image: <hr/><img src="${req.file.path.substring(7,req.file.path.length)}" width="500"><hr /><a href="./">Upload another image</a><h1>${ req.body.text }</h1>`);
+    console.log("ten phim " + tenPhim)
+    console.log(req.body)
+    console.log(req.files.File)
+    var data = req.files.File.data.toString('base64')
+    console.log("data:" + req.files.File.mimetype + ";base64," + data)
+    //console.log(req)
 
-        const {
-            maPhim,
-            tenPhim,
-            trailer,
-            moTa,
-            ngayKhoiChieu,
-            danhGia,
-            dangChieu,
-            sapChieu,
-            hot
-        } = req.body
 
-        const biDanh0 = tenPhim.toString()
-            .toLowerCase().normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/đ/g, "d")
-            .replace(/Đ/g, "D")
-            .replace(/ /g, "")
-
-        var ngayMMddYYYY = new Date(
-            parseInt(ngayKhoiChieu.substring(6, 10), 0),
-            parseInt(ngayKhoiChieu.substring(3, 5), 0),
-            parseInt(ngayKhoiChieu.substring(0, 2), 0)
-        )
-
-        const existMovie = await Movie.findOne({ _id: maPhim })
-        if (existMovie) {
-            try {
-                fs.unlinkSync("./" + existMovie.hinhAnh)
-                //file removed
-            } catch (err) {
-                console.error(err)
-            }
-        }
-
-        const {
-            path
-        } = req.file
-
-        var duongDan = path.replace("\\", "/").replace("\\", "/").replace("\\", "/")
-
-        try {
-            const updated = await Movie.findOneAndUpdate(
-                { _id: maPhim },
-                {
-                    tenPhim,
-                    biDanh: biDanh0,
-                    trailer,
-                    hinhAnh: duongDan,
-                    moTa,
-                    ngayKhoiChieu: ngayMMddYYYY,
-                    danhGia,
-                    daXoa: false,
-                    thoiLuong: 120,
-                    dangChieu,
-                    sapChieu,
-                    hot
-                },
-                { new: true }
-            )
-
-            if (!updated) {
-                return res
-                    .status(401)
-                    .json({
-                        success: false,
-                        message: 'Cập nhật Phim thất bại'
-                    })
-            }
-            else {
-                var result = {
-                    maPhim,
-                    tenPhim,
-                    biDanh: biDanh0,
-                    trailer,
-                    hinhAnh: req.file.path,
-                    moTa,
-                    ngayKhoiChieu,
-                    danhGia,
-                    daXoa: false
-                }
-
-                return res
-                    .status(200)
-                    .json({
-                        message: "Xử lý thành công",
-                        content: result
-                    })
-            }
-
-        } catch (error) {
-            console.log(error)
-            res.status(500).json({ success: false, message: 'Intenal server error(lỗi lưu trùng dữ liệu)' })
-        }
-    });
+    res.status(501).json({ test: "s" })
 })
+*/
 //--------------------------------------------------------------
 
 
 
-module.exports = router

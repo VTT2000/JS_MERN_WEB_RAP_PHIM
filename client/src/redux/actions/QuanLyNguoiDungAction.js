@@ -29,8 +29,9 @@ export const dangNhapAction = (thongTinDangNhap) => {
 export const layThongTinNguoiDungAction = (thongTinDangNhap) => {
   return async (dispatch) => {
     try {
-      const result = await quanLyNguoiDungService.layThongTinNguoiDung();
-
+      console.log("action "+ thongTinDangNhap)
+      const result = await quanLyNguoiDungService.layThongTinNguoiDung(thongTinDangNhap);
+      console.log("8888888"+result);
       dispatch({
         type: SET_THONG_TIN_NGUOI_DUNG,
         thongTinNguoiDung: result.data.content,

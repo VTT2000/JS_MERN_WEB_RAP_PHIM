@@ -15,6 +15,8 @@ const { populate } = require('../models/CinemaSystem')
 
 //-------------------------------------------------
 router.get('/LayThongTinHeThongRap', async (req, res) => {
+    console.log("LayThongTinHeThongRap")
+
     try {
         if (req.query.maHeThongRap == null) {
             const cinemaSystems = await CinemaSystem.find()
@@ -53,6 +55,7 @@ router.get('/LayThongTinHeThongRap', async (req, res) => {
 })
 
 router.get('/LayThongTinCumRapTheoHeThong', async (req, res) => {
+    console.log("LayThongTinCumRapTheoHeThong")
     try {
         if (!req.query.maHeThongRap) {
             return res
@@ -97,6 +100,7 @@ router.get('/LayThongTinCumRapTheoHeThong', async (req, res) => {
 })
 
 router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
+    console.log("LayThongTinLichChieuHeThongRap")
     try {
         if (!req.query.maHeThongRap) {
             // Tim he thong rap co lich chieu
@@ -233,10 +237,8 @@ router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
     }
 })
 
-
-
-
 router.get("/LayThongTinLichChieuPhim", async (req, res) => {
+    console.log("LayThongTinLichChieuPhim")
     try {
         if (!req.query.maPhim) {
             return res

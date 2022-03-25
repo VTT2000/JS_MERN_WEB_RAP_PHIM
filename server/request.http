@@ -176,7 +176,7 @@ GET http://localhost:5000/api/QuanLyPhim/LayDanhSachPhimTheoNgay?tuNgay=01-04-20
 
 
 ###
-DELETE http://localhost:5000/api/QuanLyPhim/XoaPhim?MaPhim=621e04d3a2756f3aa226989b
+DELETE http://localhost:5000/api/QuanLyPhim/XoaPhim?MaPhim=623c428f352d79713ced7bfe
 ###
 
 ###
@@ -191,7 +191,7 @@ POST http://localhost:5000/api/QuanLyNguoiDung/ThongTinTaiKhoan
 Content-Type: application/json
 
 {
-    "taiKhoan": "123@111"
+    "taiKhoan": "123456"
 }
 
 ###

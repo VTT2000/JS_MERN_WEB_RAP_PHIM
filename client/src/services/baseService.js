@@ -21,6 +21,24 @@ export class baseService {
         }) 
     }
 
+    // upload cap nhat hinh trong phim 
+    post0 = (url,form) => {
+        return Axios({
+            url:`${DOMAIN}${url}`,
+            method:'POST',
+            data:form,
+            headers: {
+                'Content-Type': `multipart/form-data`,
+                'Authorization': 'Bearer ' + localStorage.getItem(TOKEN)
+            },
+        }).then((res) =>{
+            console.log(res)
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+
+    
 
     get = (url) => {
         return Axios({

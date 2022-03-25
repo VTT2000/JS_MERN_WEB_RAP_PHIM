@@ -48,6 +48,7 @@ const AddNew = () => {
         }
       }
       //Gọi api gửi các giá trị formdata về backend xử lý
+      console.log("22222", formData.get("File"))
       dispatch(themPhimUploadHinhAction(formData));
     },
   });

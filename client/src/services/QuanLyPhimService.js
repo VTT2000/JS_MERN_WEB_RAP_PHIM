@@ -17,7 +17,8 @@ export class QuanLyPhimService extends baseService {
   };
 
   themPhimUploadHinh = (formData) => {
-    return this.post(`/api/QuanLyPhim/ThemPhimUploadHinh`, formData);
+    console.log("formhinhanh666", formData.get("tenPhim"));
+    return this.post0(`/api/QuanLyPhim/ThemPhimUploadHinh`, formData);
   };
 
   layThongTinPhim = (maPhim) => {
@@ -25,7 +26,7 @@ export class QuanLyPhimService extends baseService {
   };
 
   capNhatPhimUpload = (formData) => {
-    return this.post(`/api/QuanLyPhim/CapNhatPhimUpload`, formData);
+    return this.post0(`/api/QuanLyPhim/CapNhatPhimUpload`, formData);
   };
 
   xoaPhim = (maPhim) => {

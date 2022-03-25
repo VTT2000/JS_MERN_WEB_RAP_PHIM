@@ -15,6 +15,7 @@ const Movie = require('../models/Movie')
 
 //-------------------------------------------------
 router.get('/LayDanhSachPhongVe', async (req, res) => {
+    console.log("LayDanhSachPhongVe")
     if (!req.query.MaLichChieu) {
         return res
             .status(400)
@@ -106,9 +107,8 @@ router.get('/LayDanhSachPhongVe', async (req, res) => {
 
 })
 
-
-
 router.post('/DatVe', verifyToken, async (req, res) => {
+    console.log("DatVe")
     const {
         maLichChieu,
         danhSachVe,
@@ -203,6 +203,7 @@ router.post('/DatVe', verifyToken, async (req, res) => {
     }
 })
 router.post('/TaoLichChieu', verifyTokenAdmin, async (req, res) => {
+    console.log("TaoLichChieu")
     const {
         maPhim,
         ngayChieuGioChieu,
@@ -246,6 +247,14 @@ router.post('/TaoLichChieu', verifyTokenAdmin, async (req, res) => {
             parseInt(ngayChieuGioChieu.substring(14, 16),0),
             parseInt(ngayChieuGioChieu.substring(17, 19),0)
         )
+
+        console.log("start"+parseInt(ngayChieuGioChieu.substring(6, 10),0))
+        console.log(parseInt(ngayChieuGioChieu.substring(3, 5),0))
+        console.log(parseInt(ngayChieuGioChieu.substring(0, 2),0))
+        console.log(parseInt(ngayChieuGioChieu.substring(11, 13),0))
+        console.log(parseInt(ngayChieuGioChieu.substring(14, 16),0))
+        console.log(parseInt(ngayChieuGioChieu.substring(17, 19),0))
+        
         const timePhim = await Movie.findOne({_id: maPhim}).distinct("thoiLuong")
         var start0 = new Date(ngayMMddYYYYhhmmss)
         var end0 = new Date(ngayMMddYYYYhhmmss)

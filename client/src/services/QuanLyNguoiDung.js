@@ -13,12 +13,10 @@ export class QuanLyNguoiDungService extends baseService {
     return this.post(`/api/QuanLyNguoiDung/DangKy`, thongTinDangKy);
   };
 
-  layThongTinNguoiDung = () => {
-    return this.post("/api/QuanLyNguoiDung/ThongTinTaiKhoan");
+  layThongTinNguoiDung = (taiKhoan) => {
+    return this.post(`/api/QuanLyNguoiDung/ThongTinTaiKhoan`, { taiKhoan: taiKhoan });
   };
-  layThongTinNguoiDung = () => {
-    return this.post("/api/QuanLyNguoiDung/DangKy");
-  };
+  
   layUsers = () => {
     return this.get("/api/QuanLyNguoiDung/LayDanhSachNguoiDung");
   };

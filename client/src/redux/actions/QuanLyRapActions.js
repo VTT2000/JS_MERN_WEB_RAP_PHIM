@@ -9,7 +9,7 @@ export const layDanhSachHeThongRapAction = () => {
     try {
       const result = await quanLyRapService.layDanhSachHeThongRap();
 
-      console.log("result", result);
+      console.log("result9999", result);
 
       dispatch({
         type: SET_HE_THONG_RAP_CHIEU,

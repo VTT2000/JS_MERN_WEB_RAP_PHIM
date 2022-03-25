@@ -13,7 +13,7 @@ const ListSeatBook = require('../models/ListSeatBook')
 
 //-------------------------------------------------
 router.get('/LayDanhSachLoaiNguoiDung', async (req, res) => {
-
+    console.log("LayDanhSachLoaiNguoiDung")
     try {
         const listUserTypes = await UserType.find({})
         var listJsonResult = new Array();
@@ -42,6 +42,8 @@ router.get('/LayDanhSachLoaiNguoiDung', async (req, res) => {
 
 router.post('/DangNhap', async (req, res) => {
     const { taiKhoan, matKhau } = req.body
+
+    console.log("DangNhap")
 
     //Simple validation
     if (!taiKhoan || !matKhau) {
@@ -103,6 +105,7 @@ router.post('/DangNhap', async (req, res) => {
 })
 
 router.post('/DangKy', async (req, res) => {
+    console.log("DangKy")
     const {
         taiKhoan,
         hoTen,
@@ -196,6 +199,7 @@ router.post('/DangKy', async (req, res) => {
 })
 
 router.get('/LayDanhSachNguoiDung', async (req, res) => {
+    console.log("LayDanhSachNguoiDung")
     try {
         if (req.query.tuKhoa != null) {
             const listUsers = await User.find(
@@ -239,6 +243,7 @@ router.get('/LayDanhSachNguoiDung', async (req, res) => {
 })
 
 router.get('/LayDanhSachNguoiDungPhanTrang', async (req, res) => {
+    console.log("LayDanhSachNguoiDungPhanTrang")
     try {
         if (req.query.soPhanTuTrenTrang == null) {
             req.query.soPhanTuTrenTrang = 1
@@ -295,6 +300,7 @@ router.get('/LayDanhSachNguoiDungPhanTrang', async (req, res) => {
 
 
 router.get('/TimKiemNguoiDung', async (req, res) => {
+    console.log("TimKiemNguoiDung")
     try {
         if (req.query.tuKhoa != null) {
             const listUsers = await User.find(
@@ -338,6 +344,7 @@ router.get('/TimKiemNguoiDung', async (req, res) => {
 })
 
 router.get('/TimKiemNguoiDungPhanTrang', async (req, res) => {
+    console.log("TimKiemNguoiDungPhanTrang")
     try {
         if (req.query.soPhanTuTrenTrang == null) {
             req.query.soPhanTuTrenTrang = 1
@@ -393,9 +400,11 @@ router.get('/TimKiemNguoiDungPhanTrang', async (req, res) => {
 })
 
 router.post('/ThongTinTaiKhoan', async (req, res) => {
+    console.log("ThongTinTaiKhoan")
     const {
         taiKhoan
     } = req.body
+    console.log(taiKhoan);
     if (!taiKhoan) {
         return res
             .status(400)
@@ -489,6 +498,7 @@ router.post('/ThongTinTaiKhoan', async (req, res) => {
 })
 
 router.get('/ThemNguoiDung', verifyTokenAdmin, async (req, res) => {
+    console.log("ThemNguoiDung")
     const {
         taiKhoan,
         hoTen,
@@ -585,6 +595,7 @@ router.get('/ThemNguoiDung', verifyTokenAdmin, async (req, res) => {
 })
 
 router.get('/CapNhatThongTinNguoiDung', verifyToken, async (req, res) => {
+    console.log("CapNhatThongTinNguoiDung")
     const {
         taiKhoan,
         hoTen,
@@ -684,11 +695,8 @@ router.get('/CapNhatThongTinNguoiDung', verifyToken, async (req, res) => {
                 .json({
                     message: "Xử lý thành công",
                     content: jsonResult
-                })
+            })
         }
-
-
-
     } catch (error) {
         console.log(error)
         res.status(500).json({ success: false, message: 'Intenal server error' })
@@ -696,6 +704,7 @@ router.get('/CapNhatThongTinNguoiDung', verifyToken, async (req, res) => {
 })
 
 router.delete('/XoaNguoiDung', verifyTokenAdmin, async (req, res) => {
+    console.log("XoaNguoiDung")
     try {
         const taiKhoan = req.query.TaiKhoan
         const userdeleted = await Movie.findOneAndDelete({ taiKhoan: taiKhoan })
@@ -720,9 +729,6 @@ router.delete('/XoaNguoiDung', verifyTokenAdmin, async (req, res) => {
         res.status(500).json({ success: false, message: 'Intenal server error' })
     }
 })
-
-
-
 
 
 module.exports = router

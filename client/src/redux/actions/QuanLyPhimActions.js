@@ -21,6 +21,7 @@ export const layDanhSachPhimAction = (tenPhim = "") => {
 export const themPhimUploadHinhAction = (formData) => {
   return async (dispatch) => {
     try {
+      
       let result = await quanLyPhimService.themPhimUploadHinh(formData);
       alert("Thêm phim thành công!");
       console.log("result", result.data.content);

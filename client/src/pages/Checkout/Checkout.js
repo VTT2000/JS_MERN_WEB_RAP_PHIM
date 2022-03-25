@@ -368,10 +368,10 @@ function KetQuaDatVe(props) {
   );
 
   const { userLogin } = useSelector((state) => state.QuanLyNguoiDungReducer);
-
+  console.log(userLogin.taiKhoan+"999999"+thongTinNguoiDung.taiKhoan);
   useEffect(() => {
-    const action = layThongTinNguoiDungAction();
-    dispatch(action);
+    //const action = layThongTinNguoiDungAction(userLogin.taiKhoan);
+    dispatch(layThongTinNguoiDungAction(userLogin));
   }, []);
 
   console.log("thongTinNguoiDung", thongTinNguoiDung);
