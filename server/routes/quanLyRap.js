@@ -105,8 +105,8 @@ router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
         if (!req.query.maHeThongRap) {
             // Tim he thong rap co lich chieu
             const condition2 = await MovieSchedule.find().distinct("cinema")
-            const condition1 = await Cinema.find({ _id: condition2}).distinct("maCumRap")
-            const condition0 = await CinemaCluster.find({ _id: condition1}).distinct("maHeThongRap")
+            const condition1 = await Cinema.find({ _id: condition2 }).distinct("maCumRap")
+            const condition0 = await CinemaCluster.find({ _id: condition1 }).distinct("maHeThongRap")
             var jsonResponeList = new Array()
             for (let z = 0; z < condition0.length; z++) {
                 const cinemaSystem = await CinemaSystem.findOne({ _id: condition0[z] })
@@ -117,11 +117,11 @@ router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
                     const cinemaCluster = await CinemaCluster.findOne({ _id: condition3[x] })
                     var danhSachPhim = new Array()
                     // cac id rap co lich chieu theo cum rap
-                    const condition4 = await Cinema.find({ _id: condition2, maCumRap: condition3[x]}).distinct("_id")
+                    const condition4 = await Cinema.find({ _id: condition2, maCumRap: condition3[x] }).distinct("_id")
                     // cac id phim co lich chieu theo cum rap
-                    const condition5 = await MovieSchedule.find({ cinema: condition4}).distinct("movie")
-                    for (let y = 0; y < condition5.length; y++){
-                        const movie = await Movie.findOne({ _id:condition5[y] })
+                    const condition5 = await MovieSchedule.find({ cinema: condition4 }).distinct("movie")
+                    for (let y = 0; y < condition5.length; y++) {
+                        const movie = await Movie.findOne({ _id: condition5[y] })
                         var lstLichChieuTheoPhim = new Array()
                         const listMovieSchedule = await MovieSchedule.find({ movie: movie._id, cinema: condition4 })
                         listMovieSchedule.forEach(e => {
@@ -133,8 +133,8 @@ router.get('/LayThongTinLichChieuHeThongRap', async (req, res) => {
                                 giaVe: e.giaVe
                             })
                         })
-                        
-                        
+
+
                         danhSachPhim.push({
                             maPhim: movie._id,
                             tenPhim: movie.tenPhim,
@@ -246,7 +246,7 @@ router.get("/LayThongTinLichChieuPhim", async (req, res) => {
         else {
             // lay movie
             const movie = await Movie.findOne({ _id: req.query.maPhim })
-            
+
             // tim ma rap co lich chieu phim
             const conditionCinemas = await MovieSchedule.find({ movie: req.query.maPhim }).distinct("cinema")
             // tim ma cac cum rap co lich chieu phim
@@ -317,5 +317,38 @@ router.get("/LayThongTinLichChieuPhim", async (req, res) => {
     }
 
 })
+
+router.post("/LayRap", async (req, res) => {
+    console.log("LayRap")
+    const {
+        maCumRap
+    } = req.body
+
+    try {
+        const cinemas = await Cinema.find({
+            maCumRap: maCumRap
+        })
+
+        var jsonRespone = new Array()
+
+        cinemas.forEach((e) => {
+            jsonRespone.push({
+                maRap: e._id,
+                tenRap: e.tenRap
+            })
+        })
+
+        return res
+            .status(200)
+            .json({
+                message: "Xử lý thành công",
+                content: jsonRespone
+            })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ success: false, message: 'Intenal server error' })
+    }
+})
+
 
 module.exports = router
