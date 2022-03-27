@@ -404,7 +404,6 @@ router.post('/ThongTinTaiKhoan', async (req, res) => {
     const {
         taiKhoan
     } = req.body
-    console.log(taiKhoan);
     if (!taiKhoan) {
         return res
             .status(400)
@@ -414,18 +413,18 @@ router.post('/ThongTinTaiKhoan', async (req, res) => {
             })
     }
 
+    // check for existing user TaiKhoan
+    const user = await User.findOne({ taiKhoan }).populate("maLoaiNguoiDung")
+    if (!user) {
+        return res
+            .status(400)
+            .json({
+                message: "Xử lý thất bại",
+                content: "Tài khoản không tồn tại"
+            })
+    }
+    console.log(req.body)
     try {
-        // check for existing user TaiKhoan
-        const user = await User.findOne({ taiKhoan }).populate("maLoaiNguoiDung")
-        if (!user) {
-            return res
-                .status(400)
-                .json({
-                    message: "Xử lý thất bại",
-                    content: "Tài khoản không tồn tại"
-                })
-        }
-
         var thongTinDatVe = new Array()
         const bookTickets = await BookTicket.find({ maNguoiDung: user._id })
             .populate({
@@ -434,21 +433,22 @@ router.post('/ThongTinTaiKhoan', async (req, res) => {
                     path: "movie"
                 }
             })
+        console.log(0)
         for (let x = 0; x < bookTickets.length; x++) {
             const element = bookTickets[x];
             const listSeatBooks = await ListSeatBook.find({ maDatVe: element._id })
-            .populate({
-                path: "maGhe",
-                populate: {
-                    path: "maRap",
-                    populate:{
-                        path: "maCumRap",
-                        populate:{
-                            path: "maHeThongRap"
+                .populate({
+                    path: "maGhe",
+                    populate: {
+                        path: "maRap",
+                        populate: {
+                            path: "maCumRap",
+                            populate: {
+                                path: "maHeThongRap"
+                            }
                         }
                     }
-                }
-            })
+                })
             var newArray = new Array()
             for (let y = 0; y < listSeatBooks.length; y++) {
                 const e = listSeatBooks[y];
@@ -473,7 +473,7 @@ router.post('/ThongTinTaiKhoan', async (req, res) => {
                 danhSachGhe: newArray
             })
         }
-        
+        console.log(1)
         var dataResponse = new Object()
         dataResponse.taiKhoan = user.taiKhoan
         dataResponse.matKhau = user.matKhau
@@ -695,7 +695,7 @@ router.get('/CapNhatThongTinNguoiDung', verifyToken, async (req, res) => {
                 .json({
                     message: "Xử lý thành công",
                     content: jsonResult
-            })
+                })
         }
     } catch (error) {
         console.log(error)

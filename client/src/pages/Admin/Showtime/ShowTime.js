@@ -37,7 +37,7 @@ export default function ShowTime(props) {
   useEffect(async () => {
     try {
       let result = await quanLyRapService.layThongTinHeThongRap();
-      console.log("hii", result);
+      console.log("hii5", result);
       setState({
         ...state,
         heThongRapChieu: result.data.content,
@@ -49,11 +49,13 @@ export default function ShowTime(props) {
     //từ hệ thống rạp call api lấy thông tin rạp
     try {
       let result = await quanLyRapService.layThongTinCumRap(value);
+      console.log("888", result)
       //Gán giá trị cụm rạp vào state.cumRap
       setState({
         ...state,
         cumRapChieu: result.data.content,
       });
+      console.log("danhsach", state.cumRapChieu)
     } catch (error) {
       console.log("error", error.response?.data);
     }
@@ -124,6 +126,11 @@ export default function ShowTime(props) {
             onChange={handleChangeCumRap}
             placeholder="Chọn cụm rạp"
           />
+        </Form.Item>
+
+        <Form.Item label="Rạp">
+        
+          
         </Form.Item>
 
         <Form.Item label="Ngày chiếu giờ chiếu">
