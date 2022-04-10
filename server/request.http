@@ -240,12 +240,8 @@ GET http://localhost:5000/api/QuanLyRap/LayThongTinLichChieuHeThongRap
 ?maHeThongRap=621f82d51dbca3e2bd522e12
 ###
 
-POST http://localhost:5000/api/QuanLyRap/LayRap
-Content-Type: application/json
+GET http://localhost:5000/api/QuanLyRap/LayRap?maCumRap=621f83731dbca3e2bd522e18
 
-{
-    "maCumRap": "621f83731dbca3e2bd522e18"
-}
 
 ####
 

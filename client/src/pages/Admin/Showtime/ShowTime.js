@@ -31,6 +31,7 @@ export default function ShowTime(props) {
   const [state, setState] = useState({
     heThongRapChieu: [],
     cumRapChieu: [],
+    cumRap: [],
   });
   console.log(state.heThongRapChieu);
 
@@ -49,19 +50,34 @@ export default function ShowTime(props) {
     //từ hệ thống rạp call api lấy thông tin rạp
     try {
       let result = await quanLyRapService.layThongTinCumRap(value);
-      console.log("888", result)
+      console.log("nene", result);
       //Gán giá trị cụm rạp vào state.cumRap
       setState({
         ...state,
         cumRapChieu: result.data.content,
       });
-      console.log("danhsach", state.cumRapChieu)
+      console.log("danhsach", state.cumRapChieu);
     } catch (error) {
       console.log("error", error.response?.data);
     }
   };
 
-  const handleChangeCumRap = (value) => {
+  const handleChangeCumRap = async (value) => {
+    try {
+      console.log("cumrapn", value);
+      let result = await quanLyRapService.layThongTinRap(value);
+      console.log("888", result);
+      //Gán giá trị cụm rạp vào state.cumRap
+      setState({
+        ...state,
+        cumRap: result.data.content,
+      });
+      console.log("danhsach", state.cumRap);
+    } catch (error) {
+      console.log("error", error.response?.data);
+    }
+  };
+  const handleChangeRap = (value) => {
     formik.setFieldValue("maRap", value);
   };
 
@@ -128,9 +144,15 @@ export default function ShowTime(props) {
           />
         </Form.Item>
 
-        <Form.Item label="Rạp">
-        
-          
+        <Form.Item label="Rạp">
+          <Select
+            options={state.cumRap?.map((cRap, index) => ({
+              label: cRap.tenRap,
+              value: cRap.maRap,
+            }))}
+            onChange={handleChangeRap}
+            placeholder="Chọn rạp"
+          />
         </Form.Item>
 
         <Form.Item label="Ngày chiếu giờ chiếu">

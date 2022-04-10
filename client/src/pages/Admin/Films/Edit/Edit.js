@@ -53,7 +53,7 @@ const Edit = (props) => {
 
     onSubmit: (values) => {
       console.log("values", values);
-      // values.maNhom = GROUPID;
+
       //Tạo đối tượng formdata => Đưa giá trị values từ formik vào formdata
       let formData = new FormData();
       for (let key in values) {

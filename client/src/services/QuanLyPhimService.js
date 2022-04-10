@@ -26,6 +26,7 @@ export class QuanLyPhimService extends baseService {
   };
 
   capNhatPhimUpload = (formData) => {
+    console.log("formhinhanh666", formData.get("tenPhim"));
     return this.post0(`/api/QuanLyPhim/CapNhatPhimUpload`, formData);
   };
 
